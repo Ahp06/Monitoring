@@ -46,6 +46,13 @@ public class ElasticSearchUtil {
 		}
 		System.out.println("Connection " + clusterName + "@" + host + ":" + port + " established!");
 	}
+	
+	/**
+	 * Close the client stream 
+	 */
+	public static void closeElasticSearch() {
+		client.close();
+	}
 
 	/**
 	 * Return true if the index "update" already exist
