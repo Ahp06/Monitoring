@@ -24,7 +24,7 @@ public class Monitoring {
 		dmg.openConnection(config.getHostDMGSQL());
 			
 		//Each secondes, if the last modified date has changed then we load the new data
-		Runnable helloRunnable = new Runnable() {
+		Runnable dmgRunnable = new Runnable() {
 			public void run() {
 				try {
 					String lastESDate = ElasticSearchUtil.getLastUpdateTime(); 
@@ -32,9 +32,12 @@ public class Monitoring {
 					
 					if (!lastESDate.equals(lastSQLDate)) {
 						System.out.println("New data from DMG SQL Server");
+						int i = 0; 
 						for (MachineUpdate update : dmg.getUpdatesFromLastDate(lastESDate)) {
 							ElasticSearchUtil.putData(update);
+							i++;
 						}
+						System.out.println(i + " file(s) charged into ElasticSearch database");
 					}
 				} catch (SQLException | IOException | InterruptedException | ExecutionException e) {
 					// TODO Auto-generated catch block
@@ -45,7 +48,7 @@ public class Monitoring {
 		};
 		
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(helloRunnable, 0, 3, TimeUnit.SECONDS);
+		executor.scheduleAtFixedRate(dmgRunnable, 0, 3, TimeUnit.SECONDS);
 
 	}
 
