@@ -2,6 +2,7 @@ package fr.uha.ensisa.projet2A.monitoring;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,8 +16,6 @@ public class DMG {
 	private Connection connection;
 	private PreparedStatement st;
 	private ResultSet result;
-	private Timestamp lastDateModification; 
-	private boolean historyCharged; 
 
 	/**
 	 * Open the connection with the DMG SQL Server
@@ -62,74 +61,7 @@ public class DMG {
 	 */
 	public ArrayList<MachineUpdate> queryDBHistory() throws SQLException {
 
-		if(!this.isHistoryCharged()) {
-			String query = "SELECT Status , Time from mdetail";
-			this.st = this.connection.prepareStatement(query);
-			this.result = st.executeQuery();
-
-			ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();
-			while (this.result.next()) {
-
-				MachineUpdate update = new MachineUpdate();
-				update.setMachineID(1);
-				update.setMachineName("DMG_CTX");
-				update.setState(ElasticSearchUtil.getStateByLabel(result.getString("Status")));
-				update.setStateLabel(result.getString("Status"));
-				update.setTime(result.getTimestamp("Time"));
-
-				updates.add(update);
-			}
-			this.setHistoryCharged(true);
-			return updates;
-		} 
-		
-		return null; 
-		
-	}
-
-	/**
-	 * Displays all tables of the SQL database
-	 * 
-	 * @throws SQLException
-	 */
-	public void printAllTables() throws SQLException {
-		DatabaseMetaData md = this.connection.getMetaData();
-		ResultSet rs = md.getTables(null, null, "%", null);
-		while (rs.next()) {
-			System.out.println(rs.getString(3)); // Column 3 is the TABLE_NAME
-		}
-	}
-	
-	/**
-	 * Return the timestamp of the last modification into the databse 
-	 * @return
-	 * @throws SQLException
-	 */
-	public Timestamp queryLastDate() throws SQLException {
-
-		String query = "select Time from mdetail where (select max(Id) from mdetail)=Id";
-		this.st = this.connection.prepareStatement(query);
-		this.result = st.executeQuery();
-		
-		Timestamp lastDate = null ; 
-		while (this.result.next()) {
-			lastDate = result.getTimestamp("Time");
-		}
-		
-		return lastDate; 
-	}
-	
-	public Timestamp getLastDateModification() {
-		return lastDateModification;
-	}
-
-	public void setLastDateModification(Timestamp lastDateModification) {
-		this.lastDateModification = lastDateModification;
-	}
-	
-	public ArrayList<MachineUpdate> getUpdatesFromLastDate(Timestamp lastDate) throws SQLException{
-		
-		String query = "SELECT Status , Time from mdetail WHERE Time > " + lastDate;
+		String query = "SELECT Status , Time from mdetail";
 		this.st = this.connection.prepareStatement(query);
 		this.result = st.executeQuery();
 
@@ -145,16 +77,68 @@ public class DMG {
 
 			updates.add(update);
 		}
+
+		return updates;
+
+	}
+
+	/**
+	 * Displays all tables of the SQL database
+	 * 
+	 * @throws SQLException
+	 */
+	public void printAllTables() throws SQLException {
+		DatabaseMetaData md = this.connection.getMetaData();
+		ResultSet rs = md.getTables(null, null, "%", null);
+		while (rs.next()) {
+			System.out.println(rs.getString(3)); // Column 3 is the TABLE_NAME
+		}
+	}
+
+	/**
+	 * Return the timestamp of the last modification into the databse
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	public Timestamp getLastUpdateTime() throws SQLException {
+
+		String query = "select Time from mdetail where (select max(Id) from mdetail)=Id";
+		this.st = this.connection.prepareStatement(query);
+		this.result = st.executeQuery();
+
+		Timestamp lastDate = null;
+		while (this.result.next()) {
+			lastDate = result.getTimestamp("Time");
+		}
+
+		return lastDate;
+	}
+
+	public ArrayList<MachineUpdate> getUpdatesFromLastDate(java.util.Date lastDate) throws SQLException {
 		
+		String query = "SELECT Status , Time from mdetail WHERE Time > ?"; //DATEDIFF(Time, ?) > 0 
+		System.out.println(query);
+		
+		this.st = this.connection.prepareStatement(query);
+		Timestamp timestamp = new Timestamp(lastDate.getTime());
+		System.out.println(timestamp);
+		this.st.setTimestamp(1, timestamp);
+		
+		this.result = st.executeQuery();
+		ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();
+		while (this.result.next()) {
+
+			MachineUpdate update = new MachineUpdate();
+			update.setMachineID(1);
+			update.setMachineName("DMG_CTX");
+			update.setState(ElasticSearchUtil.getStateByLabel(result.getString("Status")));
+			update.setStateLabel(result.getString("Status"));
+			update.setTime(result.getTimestamp("Time"));
+			updates.add(update);
+		}
+
 		return null;
-	}
-
-	public boolean isHistoryCharged() {
-		return historyCharged;
-	}
-
-	public void setHistoryCharged(boolean historyCharged) {
-		this.historyCharged = historyCharged;
 	}
 
 }

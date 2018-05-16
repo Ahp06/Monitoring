@@ -3,14 +3,17 @@ package fr.uha.ensisa.projet2A.monitoring;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -21,6 +24,7 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
@@ -46,9 +50,9 @@ public class ElasticSearchUtil {
 		}
 		System.out.println("Connection " + clusterName + "@" + host + ":" + port + " established!");
 	}
-	
+
 	/**
-	 * Close the client stream 
+	 * Close the client stream
 	 */
 	public static void closeElasticSearch() {
 		client.close();
@@ -158,37 +162,6 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Return all documents in ElasticSearh with the index and type choosen
-	 * 
-	 * @param index
-	 * @param type
-	 * @return
-	 */
-	public static List<Map<String, Object>> getAllDocs(String index, String type) {
-
-		try {
-			int size = 1000;
-			List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-			SearchResponse response = null;
-			int i = 0;
-			while (response == null || response.getHits().getHits().length != 0) {
-				response = client.prepareSearch(index).setTypes(type).setQuery(QueryBuilders.matchAllQuery())
-						.setSize(size).setFrom(i * size).execute().actionGet();
-				for (SearchHit hit : response.getHits()) {
-					data.add(hit.getSourceAsMap());
-				}
-				i++;
-			}
-			System.out.println(data);
-			return data;
-		} catch (IndexNotFoundException e) {
-			System.out.println("Index : " + index + " doesn't exist");
-		}
-		return null;
-
-	}
-
-	/**
 	 * Delete an index by name
 	 * 
 	 * @param client
@@ -201,6 +174,41 @@ public class ElasticSearchUtil {
 		} catch (Exception e) {
 			System.out.println("Index : " + indexName + " doesn't exist");
 		}
+
+	}
+	
+	/**
+	 * Return the number of documents for the index update
+	 * @return
+	 */
+	public static long getNumberOfDocuments() {
+		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0) 
+				.get();
+
+		SearchHits hits = response.getHits();
+		long hitsCount = hits.getTotalHits();
+		
+		
+		return hitsCount; 
+	}
+
+	/**
+	 * Return the field "time" of the last object added into ElastiSearch
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public static void getLastUpdateTime() throws InterruptedException, ExecutionException {
+		
+		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize((int)getNumberOfDocuments()) 
+				.get();
+		
+		SearchHits hits = response.getHits();
+		
+		String last = hits.getAt((int)(getNumberOfDocuments()-1)).getSourceAsMap().get("time").toString(); 
+		
+		System.out.println(last);
 
 	}
 
