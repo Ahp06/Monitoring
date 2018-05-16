@@ -101,7 +101,7 @@ public class DMG {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Timestamp getLastUpdateTime() throws SQLException {
+	public String getLastUpdateTime() throws SQLException {
 
 		String query = "select Time from mdetail where (select max(Id) from mdetail)=Id";
 		this.st = this.connection.prepareStatement(query);
@@ -112,19 +112,15 @@ public class DMG {
 			lastDate = result.getTimestamp("Time");
 		}
 
-		return lastDate;
+		return lastDate.toString();
 	}
 
-	public ArrayList<MachineUpdate> getUpdatesFromLastDate(java.util.Date lastDate) throws SQLException {
+	public ArrayList<MachineUpdate> getUpdatesFromLastDate(String lastESDate) throws SQLException {
 		
-		String query = "SELECT Status , Time from mdetail WHERE Time > ?"; //DATEDIFF(Time, ?) > 0 
+		String query = "SELECT Status , Time from mdetail WHERE Time > \'" + lastESDate + "\'"; 
 		System.out.println(query);
 		
 		this.st = this.connection.prepareStatement(query);
-		Timestamp timestamp = new Timestamp(lastDate.getTime());
-		System.out.println(timestamp);
-		this.st.setTimestamp(1, timestamp);
-		
 		this.result = st.executeQuery();
 		ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();
 		while (this.result.next()) {
@@ -137,8 +133,8 @@ public class DMG {
 			update.setTime(result.getTimestamp("Time"));
 			updates.add(update);
 		}
-
-		return null;
+		
+		return updates;
 	}
 
 }

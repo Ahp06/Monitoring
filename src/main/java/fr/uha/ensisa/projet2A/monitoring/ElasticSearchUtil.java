@@ -198,17 +198,17 @@ public class ElasticSearchUtil {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public static void getLastUpdateTime() throws InterruptedException, ExecutionException {
+	public static String getLastUpdateTime() throws InterruptedException, ExecutionException {
 		
+		int position = (int)(getNumberOfDocuments()-1); 
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize((int)getNumberOfDocuments()) 
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).setFrom(position) 
 				.get();
 		
 		SearchHits hits = response.getHits();
-		
-		String last = hits.getAt((int)(getNumberOfDocuments()-1)).getSourceAsMap().get("time").toString(); 
-		
-		System.out.println(last);
+		String last = hits.getAt(0).getSourceAsMap().get("time").toString(); 
+	
+		return last; 
 
 	}
 

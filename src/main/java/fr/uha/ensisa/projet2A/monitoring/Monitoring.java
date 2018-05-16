@@ -1,5 +1,12 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
@@ -15,22 +22,21 @@ public class Monitoring {
 		// Open connection to the DMG SQL Server
 		DMG dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());
-		
-		ElasticSearchUtil.getLastUpdateTime();
 			
 		//Each secondes, if the last modified date has changed then we load the new data
-		/*Runnable helloRunnable = new Runnable() {
+		Runnable helloRunnable = new Runnable() {
 			public void run() {
 				try {
-					Timestamp lastDate = dmg.queryLastDate();
-					if (!lastDate.equals(dmg.getLastDateModification())) {
+					String lastESDate = ElasticSearchUtil.getLastUpdateTime(); 
+					String lastSQLDate = dmg.getLastUpdateTime(); 
+					
+					if (!lastESDate.equals(lastSQLDate)) {
 						System.out.println("New data from DMG SQL Server");
-						dmg.setLastDateModification(lastDate);
-						for (MachineUpdate update : dmg.getUpdatesFromLastDate(lastDate)) {
+						for (MachineUpdate update : dmg.getUpdatesFromLastDate(lastESDate)) {
 							ElasticSearchUtil.putData(update);
 						}
 					}
-				} catch (SQLException | IOException e) {
+				} catch (SQLException | IOException | InterruptedException | ExecutionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -39,7 +45,7 @@ public class Monitoring {
 		};
 		
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(helloRunnable, 0, 3, TimeUnit.SECONDS);*/
+		executor.scheduleAtFixedRate(helloRunnable, 0, 3, TimeUnit.SECONDS);
 
 	}
 
