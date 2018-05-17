@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -134,7 +138,8 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Put data by parsing an object to JSON into the ElasticSearch index "update"
+	 * Put data by parsing an object to JSON into the ElasticSearch index
+	 * "update"
 	 * 
 	 * @param update
 	 * @throws IOException
@@ -176,39 +181,45 @@ public class ElasticSearchUtil {
 		}
 
 	}
-	
+
 	/**
 	 * Return the number of documents for the index update
+	 * 
 	 * @return
 	 */
 	public static long getNumberOfDocuments() {
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0) 
-				.get();
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0).get();
 
 		SearchHits hits = response.getHits();
 		long hitsCount = hits.getTotalHits();
-		
-		
-		return hitsCount; 
+
+		return hitsCount;
 	}
 
 	/**
 	 * Return the field "time" of the last object added into ElastiSearch
+	 * 
 	 * @throws InterruptedException
 	 * @throws ExecutionException
+	 * @throws ParseException
 	 */
-	public static String getLastUpdateTime() throws InterruptedException, ExecutionException {
-		
-		int position = (int)(getNumberOfDocuments()-1); 
+	public static String getLastUpdateTime() throws InterruptedException, ExecutionException, ParseException {
+
+		int position = (int) (getNumberOfDocuments() - 1);
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).setFrom(position) 
-				.get();
-		
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).setFrom(position).get();
+
 		SearchHits hits = response.getHits();
-		String last = hits.getAt(0).getSourceAsMap().get("time").toString(); 
-	
-		return last; 
+		String last = hits.getAt(0).getSourceAsMap().get("time").toString();
+		
+		// We change the date from format yyyy-MM-dd'T'HH:mm:ss.SSSX -> yyyy-MM-dd HH:mm:ss.S
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+		Date date = df.parse(last);
+		DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+		String dateFormatted = outputFormatter.format(date); 
+
+		return dateFormatted; 
 
 	}
 
