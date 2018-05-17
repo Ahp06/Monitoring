@@ -57,6 +57,12 @@
 			<artifactId>sqljdbc4</artifactId>
 			<version>4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>net.wimpi</groupId>
+			<artifactId>jamod</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

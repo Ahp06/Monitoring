@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.elasticsearch.client.ElasticsearchClient;
 
+import net.wimpi.modbus.ModbusException;
+
 public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
@@ -25,14 +27,16 @@ public class Monitoring {
 		// Open connection to the DMG SQL Server
 		DMG dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());
-			
+		
+		//Open connection to the machines Moxa 
+		Moxa moxa = new Moxa(); 
+		
 		//Each secondes, if the last modified date has changed then we load the new data
 		Runnable dmgRunnable = new Runnable() {
 			public void run() {
 				try {
 					String lastESDate = ElasticSearchUtil.getLastUpdateTime(); 
 					String lastSQLDate = dmg.getLastUpdateTime(); 
-					
 					if (!lastESDate.equals(lastSQLDate)) {
 						System.out.println("New data from DMG SQL Server");
 						int i = 0; 
@@ -52,8 +56,25 @@ public class Monitoring {
 
 		};
 		
-		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(dmgRunnable, 0, 3, TimeUnit.SECONDS);
+		Runnable moxaRunnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					//For all IP ...
+					//moxa.readTransaction(args, 0);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		ScheduledExecutorService executorDMG = Executors.newScheduledThreadPool(1);
+		//ScheduledExecutorService executorMoxa = Executors.newScheduledThreadPool(1);
+		
+		executorDMG.scheduleAtFixedRate(dmgRunnable, 0, 3, TimeUnit.SECONDS);
+		//executorMoxa.scheduleAtFixedRate(moxaRunnable, 0, 3, TimeUnit.SECONDS);
 
 	}
 

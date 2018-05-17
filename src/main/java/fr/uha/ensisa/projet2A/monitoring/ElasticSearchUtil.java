@@ -181,7 +181,10 @@ public class ElasticSearchUtil {
 		}
 
 	}
-
+	
+	// Deux méthodes ci dessous à changer -> Modifier la bdd pour que le premier élément atteignable 
+	// soit le changement d'état le plus récent " - TimeStamp " 
+	
 	/**
 	 * Return the number of documents for the index update
 	 * 
@@ -213,7 +216,7 @@ public class ElasticSearchUtil {
 		SearchHits hits = response.getHits();
 		String last = hits.getAt(0).getSourceAsMap().get("time").toString();
 		
-		// We change the date from format yyyy-MM-dd'T'HH:mm:ss.SSSX -> yyyy-MM-dd HH:mm:ss.S
+		// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to "yyyy-MM-dd HH:mm:ss.S"
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 		Date date = df.parse(last);
 		DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
