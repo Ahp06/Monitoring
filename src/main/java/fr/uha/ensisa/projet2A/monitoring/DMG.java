@@ -118,7 +118,6 @@ public class DMG {
 	public ArrayList<MachineUpdate> getUpdatesFromLastDate(String lastESDate) throws SQLException {
 		
 		String query = "SELECT Status , Time from mdetail WHERE Time > \'" + lastESDate + "\'"; 
-		System.out.println(query);
 		
 		this.st = this.connection.prepareStatement(query);
 		this.result = st.executeQuery();

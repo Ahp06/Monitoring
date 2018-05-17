@@ -25,13 +25,6 @@ public class Monitoring {
 		// Open connection to the DMG SQL Server
 		DMG dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());
-		
-		/*System.out.println(dmg.getLastUpdateTime()); //2018-05-17 00:00:00.0
-		String last = ElasticSearchUtil.getLastUpdateTime(); //2018-05-14 13:44:09.770
-		
-		for(MachineUpdate update : dmg.getUpdatesFromLastDate(last)){
-			System.out.println(update);
-		}*/
 			
 		//Each secondes, if the last modified date has changed then we load the new data
 		Runnable dmgRunnable = new Runnable() {
@@ -43,13 +36,13 @@ public class Monitoring {
 					if (!lastESDate.equals(lastSQLDate)) {
 						System.out.println("New data from DMG SQL Server");
 						int i = 0; 
+						System.out.println("****** Loading new data ****** ");
 						for (MachineUpdate update : dmg.getUpdatesFromLastDate(lastESDate)) {
 							ElasticSearchUtil.putData(update);
+							System.out.println(update);
 							i++;
 						}
-						System.out.println(i + " file(s) charged into ElasticSearch database");
-					}else {
-						System.out.println("ElasticSearch database up to date");
+						System.out.println("******" + i + " file(s) charged into ElasticSearch database ******");
 					}
 				} catch (SQLException | InterruptedException | ExecutionException | ParseException | IOException e) {
 					// TODO Auto-generated catch block
