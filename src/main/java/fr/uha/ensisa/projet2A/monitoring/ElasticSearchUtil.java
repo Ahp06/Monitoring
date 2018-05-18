@@ -52,7 +52,7 @@ public class ElasticSearchUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Connection " + clusterName + "@" + host + ":" + port + " established!");
+		System.out.println("Connection : " + clusterName + "@" + host + ":" + port + " established!");
 	}
 
 	/**

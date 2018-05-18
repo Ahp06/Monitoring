@@ -11,40 +11,41 @@ public class MonitoringConfiguration {
 	private String hostES;
 	private int portES;
 	private String hostDMGSQL;
-	private String haas1IP; 
-	private String haas2IP; 
+	private String haas1IP;
+	private String haas2IP;
 	private String haas3IP;
 	private String demeterIP;
-	private int moxaPort; 
-	
+	private int moxaPort;
+
 	/**
 	 * Default constructor, fields must be filled
+	 * 
 	 * @param clusterNameES
 	 * @param hostES
 	 * @param portES
 	 * @param hostDMGSQL
 	 */
-	public MonitoringConfiguration(String clusterNameES, String hostES, int portES, String hostDMGSQL,
-			String haas1IP, String haas2IP, String haas3IP, String demeterIP, int moxaPort) {
-		
+	public MonitoringConfiguration(String clusterNameES, String hostES, int portES, String hostDMGSQL, String haas1IP,
+			String haas2IP, String haas3IP, String demeterIP, int moxaPort) {
+
 		super();
-		
-		if(clusterNameES.equals("") || hostES.equals("") || hostDMGSQL.equals("") || haas1IP.equals("")
+
+		if (clusterNameES.equals("") || hostES.equals("") || hostDMGSQL.equals("") || haas1IP.equals("")
 				|| haas2IP.equals("") || haas3IP.equals("") || demeterIP.equals("")) {
 			System.out.println("Wrong configuration, all fields must be filled");
-			return; 
+			return;
 		}
-		
+
 		this.clusterNameES = clusterNameES;
 		this.hostES = hostES;
 		this.portES = portES;
 		this.hostDMGSQL = hostDMGSQL;
-		this.haas1IP = haas1IP; 
+		this.haas1IP = haas1IP;
 		this.haas2IP = haas2IP;
-		this.haas3IP = haas3IP; 
-		this.demeterIP = demeterIP; 
-		this.moxaPort = moxaPort; 
-		
+		this.haas3IP = haas3IP;
+		this.demeterIP = demeterIP;
+		this.moxaPort = moxaPort;
+
 		System.out.println("Configuration initialized");
 	}
 
@@ -63,7 +64,7 @@ public class MonitoringConfiguration {
 			setHaas3IP(config.getHaas3IP());
 			setDemeterIP(config.getDemeterIP());
 			setMoxaPort(config.getMoxaPort());
-			
+
 			System.out.println("Configuration initialized");
 
 		} catch (Exception e) {
@@ -145,8 +146,22 @@ public class MonitoringConfiguration {
 
 	@Override
 	public String toString() {
-		return "MonitoringConfiguration [clusterNameES=" + clusterNameES + ", hostES=" + hostES + ", portES=" + portES
-				+ ", hostDMGSQL=" + hostDMGSQL + "]";
+		
+		StringBuilder tmp = new StringBuilder("**** Monitoring configuration : ****\n"); 
+		tmp.append("Cluster name of elasticsearch = " + this.clusterNameES + "\n"); 
+		tmp.append("Host of elasticsearch = " + this.hostES + "\n"); 
+		tmp.append("Port of elasticsearch = " + this.portES + "\n"); 
+		tmp.append("DMG SQL server host  = " + this.hostDMGSQL + "\n"); 
+		tmp.append("HAAS_VF2_5AXES IP = " + this.haas1IP +"\n"); 
+		tmp.append("HAAS_VF2_3AXES IP = " + this.haas2IP +"\n"); 
+		tmp.append("HAAS_SL20 IP = " + this.haas3IP + "\n"); 
+		tmp.append("Demeter IP = " + this.demeterIP + "\n"); 
+		tmp.append("Moxa port = " + this.moxaPort + "\n"); 
+		tmp.append("**** End of configuration ****"); 
+		
+		return tmp.toString(); 
 	}
+
+	
 
 }
