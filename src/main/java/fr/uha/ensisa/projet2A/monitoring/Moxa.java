@@ -33,7 +33,14 @@ public class Moxa {
 
 		return -1;
 	}
-
+	
+	/**
+	 * Retrieve data and return a list of update object 
+	 * @param IPs
+	 * @param port
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<MachineUpdate> readTransaction(String[] IPs, int port) throws Exception {
 
 		ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();

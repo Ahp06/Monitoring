@@ -102,7 +102,12 @@ public class ElasticSearchUtil {
 		return null;
 
 	}
-
+	
+	/**
+	 * Return the state according to the state label of the machine 
+	 * @param label
+	 * @return
+	 */
 	public static int getStateByLabel(String label) {
 
 		if (label.equals("Off")) {

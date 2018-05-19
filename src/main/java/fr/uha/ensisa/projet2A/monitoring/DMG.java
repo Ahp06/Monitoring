@@ -115,7 +115,13 @@ public class DMG {
 
 		return lastDate.toString();
 	}
-
+	
+	/**
+	 * Return the list of updates object from a specified date
+	 * @param lastESDate
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<MachineUpdate> getUpdatesFromLastDate(String lastESDate) throws SQLException {
 		
 		String query = "SELECT Status , Time from mdetail WHERE Time > \'" + lastESDate + "\'"; 

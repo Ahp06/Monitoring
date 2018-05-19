@@ -48,7 +48,11 @@ public class MonitoringConfiguration {
 
 		System.out.println("Configuration initialized");
 	}
-
+	
+	/**
+	 * Initialize the configuration by reading a .txt file in JSON format 
+	 * @param pathToJsonFile
+	 */
 	public MonitoringConfiguration(String pathToJsonFile) {
 		try (Reader reader = new FileReader(pathToJsonFile)) {
 

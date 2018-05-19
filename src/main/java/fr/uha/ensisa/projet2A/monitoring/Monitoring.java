@@ -9,7 +9,7 @@ public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
 		
-		//Modification du code, penser à supprimer l'index avant insertion de données 
+		//Modification du code, penser à supprimer l'index avant l'insertion de données (inversion des données)
 
 		// Get project configuration from config.txt
 		MonitoringConfiguration config = new MonitoringConfiguration("D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
@@ -27,8 +27,7 @@ public class Monitoring {
 		Moxa moxa = new Moxa();
 		String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
 
-		// Each 5 secondes, if the last modified date has changed then we load the new
-		// data
+		// Each 5 secondes, if the last modified date has changed then we load the new data
 		Runnable monitoringRunnable = new Runnable() {
 			public void run() {
 				try {
@@ -39,7 +38,7 @@ public class Monitoring {
 
 					// DMG
 					if (!lastESDate.equals(lastSQLDate)) {
-						System.out.println("New data from DMG SQL Server");
+						System.out.println("New data from DMG_CTX SQL Server");
 						System.out.println("****** Loading new data ****** ");
 						for (MachineUpdate update : dmg.getUpdatesFromLastDate(lastESDate)) {
 							ElasticSearchUtil.putData(update);
