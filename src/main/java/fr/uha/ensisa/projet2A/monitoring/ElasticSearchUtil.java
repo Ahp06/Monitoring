@@ -182,9 +182,6 @@ public class ElasticSearchUtil {
 
 	}
 	
-	// Deux méthodes ci dessous à changer -> Modifier la bdd pour que le premier élément atteignable 
-	// soit le changement d'état le plus récent " - TimeStamp " 
-	
 	/**
 	 * Return the number of documents for the index update
 	 * 

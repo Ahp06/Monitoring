@@ -10,6 +10,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DMG {
 
@@ -133,6 +134,7 @@ public class DMG {
 			updates.add(update);
 		}
 		
+		Collections.reverse(updates); //The most recent element will be the first into the list
 		return updates;
 	}
 
