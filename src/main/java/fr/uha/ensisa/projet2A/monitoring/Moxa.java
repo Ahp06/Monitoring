@@ -88,7 +88,6 @@ public class Moxa {
 			connection.close();
 		}
 		
-		Collections.reverse(updates); //The most recent element will be the first into the list
 		return updates;
 
 	}

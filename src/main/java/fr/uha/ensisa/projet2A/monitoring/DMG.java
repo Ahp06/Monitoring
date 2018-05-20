@@ -35,26 +35,6 @@ public class DMG {
 	}
 
 	/**
-	 * Return all columns of mdetail table
-	 * 
-	 * @throws SQLException
-	 */
-	public void printmdetailInfo() throws SQLException {
-
-		String query = "SELECT * FROM mdetail";
-		this.st = this.connection.prepareStatement(query);
-		ResultSet rs = this.st.executeQuery();
-
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int columnCount = rsmd.getColumnCount();
-
-		for (int i = 1; i <= columnCount; i++) {
-			String name = rsmd.getColumnName(i);
-			System.out.println(name);
-		}
-	}
-
-	/**
 	 * Create a list of MachineUpdate object with the DMG History
 	 * 
 	 * @return
@@ -83,18 +63,6 @@ public class DMG {
 
 	}
 
-	/**
-	 * Displays all tables of the SQL database
-	 * 
-	 * @throws SQLException
-	 */
-	public void printAllTables() throws SQLException {
-		DatabaseMetaData md = this.connection.getMetaData();
-		ResultSet rs = md.getTables(null, null, "%", null);
-		while (rs.next()) {
-			System.out.println(rs.getString(3)); // Column 3 is the TABLE_NAME
-		}
-	}
 
 	/**
 	 * Return the timestamp of the last modification into the databse
@@ -140,7 +108,6 @@ public class DMG {
 			updates.add(update);
 		}
 		
-		Collections.reverse(updates); //The most recent element will be the first into the list
 		return updates;
 	}
 

@@ -8,9 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
-		
-		//Modification du code, penser à supprimer l'index avant l'insertion de données (inversion des données)
-
+				
 		// Get project configuration from config.txt
 		MonitoringConfiguration config = new MonitoringConfiguration("D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
 		System.out.println(config);
@@ -18,7 +16,7 @@ public class Monitoring {
 		// Initialize ElasticSearch connection, creation of the index "update"
 		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
 		ElasticSearchUtil.indexUpdate();
-
+		
 		// Open connection to the DMG SQL Server
 		DMG dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());

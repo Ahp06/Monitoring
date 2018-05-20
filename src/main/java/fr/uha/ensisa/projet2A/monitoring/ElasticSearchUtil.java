@@ -29,6 +29,7 @@ import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
@@ -213,7 +214,7 @@ public class ElasticSearchUtil {
 
 		int position = (int) (getNumberOfDocuments() - 1);
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).setFrom(position).get();
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).setFrom(position).get(); //addSort("time", SortOrder.DESC) ?
 
 		SearchHits hits = response.getHits();
 		String last = hits.getAt(0).getSourceAsMap().get("time").toString();
