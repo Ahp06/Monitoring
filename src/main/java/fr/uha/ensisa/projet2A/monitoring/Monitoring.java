@@ -11,22 +11,22 @@ public class Monitoring {
 				
 		// Get project configuration from config.txt
 		MonitoringConfiguration config = new MonitoringConfiguration("D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
-		System.out.println(config);
+		config.show();
 
 		// Initialize ElasticSearch connection, creation of the index "update"
-		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
-		ElasticSearchUtil.indexUpdate();
+		//ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
+		//ElasticSearchUtil.indexUpdate();
 		
 		// Open connection to the DMG SQL Server
-		DMG dmg = new DMG();
-		dmg.openConnection(config.getHostDMGSQL());
+		//DMG dmg = new DMG();
+		//dmg.openConnection(config.getHostDMGSQL());
 
 		// Open connection to the machines Moxa
-		Moxa moxa = new Moxa();
-		String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
+		//Moxa moxa = new Moxa();
+		//String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
 
 		// Each 5 secondes, if the last modified date has changed then we load the new data
-		Runnable monitoringRunnable = new Runnable() {
+		/*Runnable monitoringRunnable = new Runnable() {
 			public void run() {
 				try {
 					// Init
@@ -66,7 +66,7 @@ public class Monitoring {
 		};
 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
-		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, 5, TimeUnit.SECONDS);
+		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, 5, TimeUnit.SECONDS);*/
 
 	}
 

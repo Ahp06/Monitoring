@@ -148,13 +148,13 @@ public class MonitoringConfiguration {
 		this.moxaPort = moxaPort;
 	}
 
-	@Override
-	public String toString() {
+	
+	public void show() {
 		
 		StringBuilder tmp = new StringBuilder("**** Monitoring configuration : ****\n"); 
-		tmp.append("Cluster name of elasticsearch = " + this.clusterNameES + "\n"); 
-		tmp.append("Host of elasticsearch = " + this.hostES + "\n"); 
-		tmp.append("Port of elasticsearch = " + this.portES + "\n"); 
+		tmp.append("Elasticsearch cluster name   = " + this.clusterNameES + "\n"); 
+		tmp.append("Elasticsearch host = " + this.hostES + "\n"); 
+		tmp.append("Elasticsearch port = " + this.portES + "\n"); 
 		tmp.append("DMG SQL server host  = " + this.hostDMGSQL + "\n"); 
 		tmp.append("HAAS_VF2_5AXES IP = " + this.haas1IP +"\n"); 
 		tmp.append("HAAS_VF2_3AXES IP = " + this.haas2IP +"\n"); 
@@ -163,7 +163,7 @@ public class MonitoringConfiguration {
 		tmp.append("Moxa port = " + this.moxaPort + "\n"); 
 		tmp.append("**** End of configuration ****"); 
 		
-		return tmp.toString(); 
+		System.out.println(tmp.toString()); 
 	}
 
 	
