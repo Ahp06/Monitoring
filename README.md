@@ -18,7 +18,7 @@ you can create your configuration :
 MonitoringConfiguration config = new MonitoringConfiguration("...\\config.txt");
 
 //With default constructor 
-MonitoringConfiguration config = new MonitoringConfiguration(yourClusterNameES, yourHostES, yourPortES, yourHostSQL); 
+MonitoringConfiguration config = new MonitoringConfiguration(yourClusterNameES, yourHostES, yourPortES, yourHostSQL,...); 
 ```
 
 By default ElasticSearch use 9200 and 9300 ports and the cluster name is "elasticsearch". 
