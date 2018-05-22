@@ -103,9 +103,10 @@ public class ElasticSearchUtil {
 		return null;
 
 	}
-	
+
 	/**
-	 * Return the state according to the state label of the machine 
+	 * Return the state according to the state label of the machine
+	 * 
 	 * @param label
 	 * @return
 	 */
@@ -187,46 +188,39 @@ public class ElasticSearchUtil {
 		}
 
 	}
-	
+
 	/**
-	 * Return the number of documents for the index update
+	 * Return true if the elasticsearch database is empty 
 	 * 
 	 * @return
 	 */
-	public static long getNumberOfDocuments() {
+	public static boolean isESDatabaseEmpty() {
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
 				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0).get();
 
 		SearchHits hits = response.getHits();
 		long hitsCount = hits.getTotalHits();
 
-		return hitsCount;
+		return hitsCount == 0;
 	}
 
-	/**
-	 * Return the field "time" of the last object added into ElastiSearch
-	 * 
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 * @throws ParseException
-	 */
 	public static String getLastUpdateTime() throws InterruptedException, ExecutionException, ParseException {
 
-		int position = (int) (getNumberOfDocuments() - 1);
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).setFrom(position).get(); //addSort("time", SortOrder.DESC) ?
-
+				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).addSort("time",SortOrder.DESC).get(); 
 		SearchHits hits = response.getHits();
 		String last = hits.getAt(0).getSourceAsMap().get("time").toString();
-		
-		// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to "yyyy-MM-dd HH:mm:ss.S"
+
+		// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to
+		// "yyyy-MM-dd HH:mm:ss.S"
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 		Date date = df.parse(last);
 		DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-		String dateFormatted = outputFormatter.format(date); 
-
-		return dateFormatted; 
+		String dateFormatted = outputFormatter.format(date);
+		return dateFormatted;
 
 	}
+	
+	
 
 }
