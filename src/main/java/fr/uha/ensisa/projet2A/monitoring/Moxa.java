@@ -1,10 +1,8 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
 import java.net.InetAddress;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-
 import net.wimpi.modbus.io.ModbusTCPTransaction;
 import net.wimpi.modbus.msg.ReadInputDiscretesRequest;
 import net.wimpi.modbus.msg.ReadInputDiscretesResponse;
@@ -80,7 +78,7 @@ public class Moxa {
 				update.setMachineID(this.getIDByName(this.machines[i]));
 				update.setState(state);
 				update.setStateLabel(ElasticSearchUtil.getStateLabel(update.getState()));
-				update.setTime(new Date());
+				update.setTime(new Timestamp(System.currentTimeMillis()));
 
 				updates.add(update);
 			}

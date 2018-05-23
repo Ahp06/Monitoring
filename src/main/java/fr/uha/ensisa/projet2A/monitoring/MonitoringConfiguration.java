@@ -148,8 +148,8 @@ public class MonitoringConfiguration {
 		this.moxaPort = moxaPort;
 	}
 
-	
-	public void show() {
+	@Override
+	public String toString() {
 		
 		StringBuilder tmp = new StringBuilder("**** Monitoring configuration : ****\n"); 
 		tmp.append("Elasticsearch cluster name   = " + this.clusterNameES + "\n"); 
@@ -163,7 +163,7 @@ public class MonitoringConfiguration {
 		tmp.append("Moxa port = " + this.moxaPort + "\n"); 
 		tmp.append("**** End of configuration ****"); 
 		
-		System.out.println(tmp.toString()); 
+		return tmp.toString(); 
 	}
 
 	

@@ -1,5 +1,6 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class MachineUpdate {
@@ -8,7 +9,7 @@ public class MachineUpdate {
 	private String machineName;
 	private int state;
 	private String stateLabel;
-	private Date time;
+	private Timestamp time;
 
 	public int getMachineID() {
 		return machineID;
@@ -42,11 +43,11 @@ public class MachineUpdate {
 		this.stateLabel = stateLabel;
 	}
 
-	public Date getTime() {
+	public Timestamp getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(Timestamp time) {
 		this.time = time;
 	}
 	

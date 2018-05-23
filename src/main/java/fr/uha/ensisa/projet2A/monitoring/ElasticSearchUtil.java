@@ -3,21 +3,15 @@ package fr.uha.ensisa.projet2A.monitoring;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -25,9 +19,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -195,11 +187,12 @@ public class ElasticSearchUtil {
 	 * @return
 	 */
 	public static boolean isESDatabaseEmpty() {
+		// Ou seulement récupérer le premier ? 
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
 				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0).get();
 
 		SearchHits hits = response.getHits();
-		long hitsCount = hits.getTotalHits();
+		long hitsCount = hits.getTotalHits(); 
 
 		return hitsCount == 0;
 	}

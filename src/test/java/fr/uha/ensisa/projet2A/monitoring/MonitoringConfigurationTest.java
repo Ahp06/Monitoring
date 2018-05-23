@@ -77,5 +77,37 @@ public class MonitoringConfigurationTest {
 		assertEquals(sut.getMoxaPort(),3636);
 	}
 	
+	@Test
+	public void show() {
+		String printed = "**** Monitoring configuration : ****\n" + 
+				"Elasticsearch cluster name   = clusterName\n" + 
+				"Elasticsearch host = localhost\n" + 
+				"Elasticsearch port = 9200\n" + 
+				"DMG SQL server host  = bdd\n" + 
+				"HAAS_VF2_5AXES IP = haas1IP\n" + 
+				"HAAS_VF2_3AXES IP = haas2IP\n" + 
+				"HAAS_SL20 IP = haas3IP\n" + 
+				"Demeter IP = demeterIP\n" + 
+				"Moxa port = 8080\n" + 
+				"**** End of configuration ****"; 
+		
+		assertEquals(printed, sut.toString());
+	}
+	
+	@Test
+	public void configByfile() {
+		sut  = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
+		System.out.println(sut);
+		assertEquals(sut.getClusterNameES(), null);
+		assertEquals(sut.getHostES(), null);
+		assertEquals(sut.getPortES(), 0);
+		assertEquals(sut.getHostDMGSQL(), null);
+		assertEquals(sut.getHaas1IP(), null);
+		assertEquals(sut.getHaas2IP(), null);
+		assertEquals(sut.getHaas3IP(), null);
+		assertEquals(sut.getDemeterIP(), null);
+		assertEquals(sut.getMoxaPort(), 0);
+		
+	}
 	
 }

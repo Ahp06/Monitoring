@@ -11,7 +11,7 @@ public class Monitoring {
 				
 		// Get project configuration from config.txt
 		MonitoringConfiguration config = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
-		config.show();
+		System.out.println(config);
 
 		// Initialize ElasticSearch connection, creation of the index "update"
 		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
@@ -25,9 +25,9 @@ public class Monitoring {
 		//Moxa moxa = new Moxa();
 		//String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
 
-		
+		// Add of a first element into Elasticsearch database 
 		if (ElasticSearchUtil.isESDatabaseEmpty()) {
-			System.out.println("ES db initialized");
+			System.out.println("ES database initialized");
 			ElasticSearchUtil.putData(dmg.queryDBHistory().get(0));
 		}
 		

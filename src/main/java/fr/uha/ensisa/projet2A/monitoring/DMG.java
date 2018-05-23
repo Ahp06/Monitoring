@@ -1,16 +1,12 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class DMG {
 
@@ -63,7 +59,6 @@ public class DMG {
 
 	}
 
-
 	/**
 	 * Return the timestamp of the last modification into the databse
 	 * 
@@ -72,29 +67,30 @@ public class DMG {
 	 */
 	public String getLastUpdateTime() throws SQLException {
 
-		String query = "select Time from mdetail where (select max(Id) from mdetail)=Id";
-		//String query ="SELECT Time from mdetail ORDER BY Time DESC LIMIT 1"; 
+		String query = "SELECT Time from mdetail ORDER BY Time DESC LIMIT 1";
 		this.st = this.connection.prepareStatement(query);
 		this.result = st.executeQuery();
 
 		Timestamp lastDate = null;
-		while (this.result.next()) {
-			lastDate = result.getTimestamp("Time");
-		}
+		
+		this.result.next();
+		lastDate = result.getTimestamp("Time");
+		
 
 		return lastDate.toString();
 	}
-	
+
 	/**
 	 * Return the list of updates object from a specified date
+	 * 
 	 * @param lastESDate
 	 * @return
 	 * @throws SQLException
 	 */
 	public ArrayList<MachineUpdate> getUpdatesFromLastDate(String lastESDate) throws SQLException {
-		
-		String query = "SELECT Status , Time from mdetail WHERE Time > \'" + lastESDate + "\'"; 
-		
+
+		String query = "SELECT Status , Time from mdetail WHERE Time > \'" + lastESDate + "\'";
+
 		this.st = this.connection.prepareStatement(query);
 		this.result = st.executeQuery();
 		ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();
@@ -108,7 +104,7 @@ public class DMG {
 			update.setTime(result.getTimestamp("Time"));
 			updates.add(update);
 		}
-		
+
 		return updates;
 	}
 
