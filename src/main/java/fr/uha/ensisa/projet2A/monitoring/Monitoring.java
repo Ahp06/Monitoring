@@ -22,15 +22,15 @@ public class Monitoring {
 		dmg.openConnection(config.getHostDMGSQL());
 
 		// Open connection to the machines Moxa
-		//Moxa moxa = new Moxa();
-		//String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
+		Moxa moxa = new Moxa();
+		String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
 
 		// Add of a first element into Elasticsearch database 
 		if (ElasticSearchUtil.isESDatabaseEmpty()) {
 			System.out.println("ES database initialized");
 			ElasticSearchUtil.putData(dmg.queryDBHistory().get(0));
 		}
-		
+	
 		// Each 5 secondes, if the last modified date has changed then we load the new data
 		Runnable monitoringRunnable = new Runnable() {
 			public void run() {
@@ -40,8 +40,8 @@ public class Monitoring {
 					String lastSQLDate = dmg.getLastUpdateTime();
 					int i = 0;
 					
-					System.out.println("lastESDate = " + lastESDate);
-					System.out.println("lastSQLDate = " + lastSQLDate);
+					//System.out.println("lastESDate = " + lastESDate);
+					//System.out.println("lastSQLDate = " + lastSQLDate);
 					
 					// DMG
 					if (!lastESDate.equals(lastSQLDate)) {

@@ -55,7 +55,7 @@ public class Moxa {
 				System.out.println("***** The machine : " + inet.getHostAddress() + " is off ***** ");
 			}
 
-			this.rreq = new ReadInputDiscretesRequest(0, 2);
+			/*this.rreq = new ReadInputDiscretesRequest(0, 2);
 			this.transaction = new ModbusTCPTransaction(connection);
 			this.transaction.setRequest(rreq);
 			this.transaction.execute();
@@ -82,7 +82,7 @@ public class Moxa {
 
 				updates.add(update);
 			}
-
+			*/
 			connection.close();
 		}
 		

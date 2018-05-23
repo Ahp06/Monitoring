@@ -67,15 +67,14 @@ public class DMG {
 	 */
 	public String getLastUpdateTime() throws SQLException {
 
-		String query = "SELECT Time from mdetail ORDER BY Time DESC LIMIT 1";
+		String query = "SELECT Time from mdetail where (select max(Id) from mdetail)=Id";
 		this.st = this.connection.prepareStatement(query);
 		this.result = st.executeQuery();
 
 		Timestamp lastDate = null;
-		
-		this.result.next();
-		lastDate = result.getTimestamp("Time");
-		
+		while(this.result.next()){
+			lastDate = result.getTimestamp("Time");
+		}
 
 		return lastDate.toString();
 	}
