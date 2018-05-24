@@ -55,7 +55,7 @@ public class Moxa {
 				connection = new TCPMasterConnection(inet);
 				connection.setPort(port);
 				connection.connect();
-				System.out.println("***** The machine : " + inet.getHostAddress() + " is on ***** ");
+				System.out.println("The machine : " + inet.getHostAddress() + " is on ");
 
 				this.rreq = new ReadInputDiscretesRequest(0, 2);
 				this.transaction = new ModbusTCPTransaction(connection);
@@ -87,7 +87,7 @@ public class Moxa {
 				connection.close();
 
 			} else {
-				System.out.println("***** The machine : " + inet.getHostAddress() + " is off ***** ");
+				System.out.println("The machine : " + inet.getHostAddress() + " is off ");
 			}
 		}
 

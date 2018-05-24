@@ -122,16 +122,20 @@ public class ElasticSearchUtil {
 
 	/**
 	 * Index an update
+	 * @param firstUpdate 
 	 * 
 	 * @throws IOException
 	 */
-	public static void indexUpdate() throws IOException {
-
+	public static void indexUpdate(MachineUpdate firstUpdate) throws IOException {
+		// A changer -> créer l'index avec le premier élement à pousser dans la base 
 		if (!isIndexRegistered()) {
 			IndexResponse response = client.prepareIndex("update", "MachineUpdate")
-					.setSource(XContentFactory.jsonBuilder().startObject().field("machineID", 1)
-							.field("machineName", "	").field("state", 1).field("stateLabel", getStateLabel(1))
-							.field("time", new Date()).endObject())
+					.setSource(XContentFactory.jsonBuilder().startObject()
+							.field("machineID", firstUpdate.getMachineID())
+							.field("machineName", firstUpdate.getMachineName())
+							.field("state", firstUpdate.getState())
+							.field("stateLabel", getStateLabel(firstUpdate.getState()))
+							.field("time", firstUpdate.getTime()).endObject())
 					.execute().actionGet();
 		}
 	}
@@ -199,18 +203,22 @@ public class ElasticSearchUtil {
 
 	public static String getLastUpdateTime() throws InterruptedException, ExecutionException, ParseException {
 
-		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(1).addSort("time",SortOrder.DESC).get(); 
+		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate").
+				 setQuery(QueryBuilders.matchAllQuery()).setSize(1).addSort("time",SortOrder.DESC).get();
 		SearchHits hits = response.getHits();
-		String last = hits.getAt(0).getSourceAsMap().get("time").toString();
-
-		// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to
-		// "yyyy-MM-dd HH:mm:ss.S"
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-		Date date = df.parse(last);
-		DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-		String dateFormatted = outputFormatter.format(date);
-		return dateFormatted;
+		if(hits.getTotalHits() !=0){
+			String last = hits.getAt(0).getSourceAsMap().get("time").toString();
+			// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to
+			// "yyyy-MM-dd HH:mm:ss.S"
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+			Date date = df.parse(last);
+			DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+			String dateFormatted = outputFormatter.format(date);
+			return dateFormatted;
+		}
+		
+		return null;
+		
 
 	}
 	

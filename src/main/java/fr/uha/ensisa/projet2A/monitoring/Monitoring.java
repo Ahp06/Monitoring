@@ -7,38 +7,43 @@ import java.util.concurrent.TimeUnit;
 
 public class Monitoring {
 
+	private static MonitoringConfiguration config;
+	private static DMG dmg;
+	private static Moxa moxa;
+
 	public static void main(String[] args) throws Exception {
-		
-		final MonitoringConfiguration config; 
-			
+
 		// Get project configuration from config.txt
-		if(args.length == 0){
-			config = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt"); 
-		} else {
+		if (args.length == 0) {
+			config = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
+		} else if (args.length == 1) {
 			System.out.println("Configuration file charged = " + args[0]);
 			config = new MonitoringConfiguration(args[0]);
 			System.out.println(config);
+		} else {
+			System.out.println("You must add a configuration to run this project");
+			System.exit(0);
 		}
-		
-		// Initialize ElasticSearch connection, creation of the index "update"
-		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
-		ElasticSearchUtil.indexUpdate();
-		
+
 		// Open connection to the DMG SQL Server
-		final DMG dmg = new DMG();
+		dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());
 
 		// Open connection to the machines Moxa
-		final Moxa moxa = new Moxa();
+		moxa = new Moxa();
 		final String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
 
-		// Add of a first element into Elasticsearch database 
-		if (ElasticSearchUtil.isESDatabaseEmpty()) {
-			System.out.println("ES database initialized");
-			ElasticSearchUtil.putData(dmg.queryDBHistory().get(0));
+		// Initialize ElasticSearch connection, creation of the index "update"
+		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
+		ElasticSearchUtil.indexUpdate(dmg.queryDBHistory().get(0));
+		
+		//Add of a first element into ES database 
+		if(ElasticSearchUtil.isESDatabaseEmpty()){
+			ElasticSearchUtil.putData(dmg.queryDBHistory().get(1));
 		}
-	
-		// Each 5 secondes, if the last modified date has changed then we load the new data
+
+		// Each 5 secondes, if the last modified date has changed then we load
+		// the new data
 		Runnable monitoringRunnable = new Runnable() {
 			public void run() {
 				try {
@@ -46,12 +51,12 @@ public class Monitoring {
 					String lastESDate = ElasticSearchUtil.getLastUpdateTime();
 					String lastSQLDate = dmg.getLastUpdateTime();
 					int i = 0;
-					
-					//System.out.println("lastESDate = " + lastESDate);
-					//System.out.println("lastSQLDate = " + lastSQLDate);
-					
+
+					// System.out.println("lastESDate = " + lastESDate);
+					// System.out.println("lastSQLDate = " + lastSQLDate);
+
 					// DMG
-					if (!lastESDate.equals(lastSQLDate)) {
+					if (lastESDate != null && !lastESDate.equals(lastSQLDate)) {
 						System.out.println("New data from DMG_CTX SQL Server");
 						System.out.println("****** Loading new data ****** ");
 						for (MachineUpdate update : dmg.getUpdatesFromLastDate(lastESDate)) {
@@ -72,12 +77,12 @@ public class Monitoring {
 							i++;
 						}
 					}
-					if(i==0) {
-						System.out.println("****** Elasticsearch databse up to date ******");
+					if (i == 0) {
+						System.out.println("****** Elasticsearch database up to date ******");
 					} else {
 						System.out.println("******" + i + " file(s) charged into ElasticSearch database ******");
 					}
-					
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
