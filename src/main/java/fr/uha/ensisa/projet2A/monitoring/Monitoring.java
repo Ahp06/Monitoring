@@ -8,22 +8,29 @@ import java.util.concurrent.TimeUnit;
 public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
-				
+		
+		final MonitoringConfiguration config; 
+			
 		// Get project configuration from config.txt
-		MonitoringConfiguration config = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
-		System.out.println(config);
-
+		if(args.length == 0){
+			config = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt"); 
+		} else {
+			System.out.println("Configuration file charged = " + args[0]);
+			config = new MonitoringConfiguration(args[0]);
+			System.out.println(config);
+		}
+		
 		// Initialize ElasticSearch connection, creation of the index "update"
 		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
 		ElasticSearchUtil.indexUpdate();
 		
 		// Open connection to the DMG SQL Server
-		DMG dmg = new DMG();
+		final DMG dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());
 
 		// Open connection to the machines Moxa
-		Moxa moxa = new Moxa();
-		String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
+		final Moxa moxa = new Moxa();
+		final String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
 
 		// Add of a first element into Elasticsearch database 
 		if (ElasticSearchUtil.isESDatabaseEmpty()) {
@@ -55,7 +62,7 @@ public class Monitoring {
 					}
 
 					// Moxa
-					/*ArrayList<MachineUpdate> updates = moxa.readTransaction(IPs, config.getMoxaPort());
+					ArrayList<MachineUpdate> updates = moxa.readTransaction(IPs, config.getMoxaPort());
 					if (!updates.isEmpty()) {
 						System.out.println("New data from machines connected with a Moxa");
 						System.out.println("****** Loading new data ****** ");
@@ -64,8 +71,13 @@ public class Monitoring {
 							System.out.println(update);
 							i++;
 						}
-					}*/
-					System.out.println("******" + i + " file(s) charged into ElasticSearch database ******");
+					}
+					if(i==0) {
+						System.out.println("****** Elasticsearch databse up to date ******");
+					} else {
+						System.out.println("******" + i + " file(s) charged into ElasticSearch database ******");
+					}
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

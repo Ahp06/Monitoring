@@ -96,7 +96,7 @@ public class MonitoringConfigurationTest {
 	
 	@Test
 	public void configByfile() {
-		sut  = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
+		sut  = new MonitoringConfiguration(null);
 		System.out.println(sut);
 		assertEquals(sut.getClusterNameES(), null);
 		assertEquals(sut.getHostES(), null);

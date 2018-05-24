@@ -3,6 +3,10 @@ package fr.uha.ensisa.projet2A.monitoring;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import net.wimpi.modbus.io.ModbusTCPTransaction;
 import net.wimpi.modbus.msg.ReadInputDiscretesRequest;
 import net.wimpi.modbus.msg.ReadInputDiscretesResponse;
@@ -31,9 +35,10 @@ public class Moxa {
 
 		return -1;
 	}
-	
+
 	/**
-	 * Retrieve data and return a list of update object 
+	 * Retrieve data and return a list of update object
+	 * 
 	 * @param IPs
 	 * @param port
 	 * @return
@@ -50,43 +55,44 @@ public class Moxa {
 				connection = new TCPMasterConnection(inet);
 				connection.setPort(port);
 				connection.connect();
+				System.out.println("***** The machine : " + inet.getHostAddress() + " is on ***** ");
+
+				this.rreq = new ReadInputDiscretesRequest(0, 2);
+				this.transaction = new ModbusTCPTransaction(connection);
+				this.transaction.setRequest(rreq);
+				this.transaction.execute();
+				this.rres = (ReadInputDiscretesResponse) transaction.getResponse();
+				int state = -1;
+
+				if (rres.getDiscreteStatus(0) == false && rres.getDiscreteStatus(1) == false) {
+					state = 1; // Stop
+				} else if (rres.getDiscreteStatus(0) == true && rres.getDiscreteStatus(1) == true) {
+					state = 3; // Off
+				} else if (rres.getDiscreteStatus(0) == true && rres.getDiscreteStatus(1) == false) {
+					state = 2; // Run 
+				} else if (rres.getDiscreteStatus(0) == false && rres.getDiscreteStatus(1) == true) {
+					state = 3; // Off 
+				}
+
+				if (state != -1) {
+					MachineUpdate update = new MachineUpdate();
+					update.setMachineName(this.machines[i]);
+					update.setMachineID(this.getIDByName(this.machines[i]));
+					update.setState(state);
+					update.setStateLabel(ElasticSearchUtil.getStateLabel(update.getState()));
+					update.setTime(new Timestamp(System.currentTimeMillis()));
+					updates.add(update);
+				}
+
+				connection.close();
 
 			} else {
 				System.out.println("***** The machine : " + inet.getHostAddress() + " is off ***** ");
 			}
-
-			/*this.rreq = new ReadInputDiscretesRequest(0, 2);
-			this.transaction = new ModbusTCPTransaction(connection);
-			this.transaction.setRequest(rreq);
-			this.transaction.execute();
-			this.rres = (ReadInputDiscretesResponse) transaction.getResponse();
-			int state = -1;
-
-			if (rres.getDiscreteStatus(0) == false && rres.getDiscreteStatus(1) == false) {
-				state = 1; // Stop
-			} else if (rres.getDiscreteStatus(0) == true && rres.getDiscreteStatus(1) == true) {
-				state = 3; // Off
-			} else if (rres.getDiscreteStatus(0) == true && rres.getDiscreteStatus(1) == false) {
-				state = 2; // Run
-			} else if (rres.getDiscreteStatus(0) == false && rres.getDiscreteStatus(1) == true) {
-				state = 3; // Off
-			}
-
-			if (state != -1) {
-				MachineUpdate update = new MachineUpdate();
-				update.setMachineName(this.machines[i]);
-				update.setMachineID(this.getIDByName(this.machines[i]));
-				update.setState(state);
-				update.setStateLabel(ElasticSearchUtil.getStateLabel(update.getState()));
-				update.setTime(new Timestamp(System.currentTimeMillis()));
-
-				updates.add(update);
-			}
-			*/
-			connection.close();
 		}
-		
+
 		return updates;
 
 	}
+
 }
