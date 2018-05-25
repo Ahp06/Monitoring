@@ -19,23 +19,6 @@ public class Moxa {
 	private ReadInputDiscretesRequest rreq = null;
 	private ReadInputDiscretesResponse rres = null;
 
-	private String[] machines = { "Demeter", "HAAS_VF2_5AXES", "HAAS_VF2_3AXES", "HAAS_SL20" };
-
-	public int getIDByName(String machineName) {
-		// ID 1 is for DMG_CTX
-		if (machineName.equals("Demeter")) {
-			return 2;
-		} else if (machineName.equals("HAAS_VF2_5AXES")) {
-			return 3;
-		} else if (machineName.equals("HAAS_VF2_3AXES")) {
-			return 4;
-		} else if (machineName.equals("HAAS_SL20")) {
-			return 5;
-		}
-
-		return -1;
-	}
-
 	/**
 	 * Retrieve data and return a list of update object
 	 * 
@@ -44,7 +27,7 @@ public class Moxa {
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<MachineUpdate> readTransaction(String[] IPs, int port) throws Exception {
+	public ArrayList<MachineUpdate> readTransaction(String[] IPs, String[] machineNames, int port) throws Exception {
 
 		ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();
 		for (int i = 0; i < IPs.length; i++) {
@@ -55,7 +38,7 @@ public class Moxa {
 				connection = new TCPMasterConnection(inet);
 				connection.setPort(port);
 				connection.connect();
-				System.out.println("The machine : " + inet.getHostAddress() + " is on ");
+				System.out.println("The machine : " + inet.getHostAddress() + " is on ( " + machineNames[i] + " )");
 
 				this.rreq = new ReadInputDiscretesRequest(0, 2);
 				this.transaction = new ModbusTCPTransaction(connection);
@@ -76,8 +59,8 @@ public class Moxa {
 
 				if (state != -1) {
 					MachineUpdate update = new MachineUpdate();
-					update.setMachineName(this.machines[i]);
-					update.setMachineID(this.getIDByName(this.machines[i]));
+					update.setMachineName(machineNames[i]);
+					update.setMachineID(i+2); // ID = 1 is for DMG_CTX and ID = 0 isn't awarded 
 					update.setState(state);
 					update.setStateLabel(ElasticSearchUtil.getStateLabel(update.getState()));
 					update.setTime(new Timestamp(System.currentTimeMillis()));

@@ -2,8 +2,12 @@ package fr.uha.ensisa.projet2A.monitoring;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import com.vividsolutions.jts.util.Assert;
 
 public class MonitoringConfigurationTest {
 	
@@ -11,7 +15,9 @@ public class MonitoringConfigurationTest {
 	
 	@Before 
 	public void create() {
-		sut = new MonitoringConfiguration("clusterName","localhost",9200,"bdd","haas1IP","haas2IP","haas3IP","demeterIP",8080); 
+		String[] IPs = { "demeterIP","haas1IP","haas2IP","haas3IP", }; 
+		String[] machineNames = { "Demeter" , "HAAS_VF2_5AXES" , "HAAS_VF2_3AXES" , "HAAS_SL20" }; 
+		sut = new MonitoringConfiguration("clusterName","localhost",9200,"bdd", IPs , machineNames,8080,5); 
 	}
 	
 	@Test
@@ -42,32 +48,10 @@ public class MonitoringConfigurationTest {
 		assertEquals(sut.getHostDMGSQL(),"new bdd");
 	}
 	
-	@Test
-	public void setHaas1IP() {
-		assertEquals(sut.getHaas1IP(), "haas1IP");
-		sut.setHaas1IP("new haas1IP");
-		assertEquals(sut.getHaas1IP(),"new haas1IP");
-	}
-	
-	@Test
-	public void setHaas2IP() {
-		assertEquals(sut.getHaas2IP(), "haas2IP");
-		sut.setHaas2IP("new haas2IP");
-		assertEquals(sut.getHaas2IP(),"new haas2IP");
-	}
-	
-	@Test
-	public void setHaas3IP() {
-		assertEquals(sut.getHaas3IP(), "haas3IP");
-		sut.setHaas3IP("new haas3IP");
-		assertEquals(sut.getHaas3IP(),"new haas3IP");
-	}
-	
-	@Test
-	public void setDemeterIP() {
-		assertEquals(sut.getDemeterIP(), "demeterIP");
-		sut.setDemeterIP("new demeterIP");
-		assertEquals(sut.getDemeterIP(),"new demeterIP");
+	@Test 
+	public void setIPs() {
+		System.out.println(sut.getIPs());
+		//assertEquals(sut.getIPs(), );
 	}
 	
 	@Test
@@ -84,30 +68,38 @@ public class MonitoringConfigurationTest {
 				"Elasticsearch host = localhost\n" + 
 				"Elasticsearch port = 9200\n" + 
 				"DMG SQL server host  = bdd\n" + 
-				"HAAS_VF2_5AXES IP = haas1IP\n" + 
-				"HAAS_VF2_3AXES IP = haas2IP\n" + 
-				"HAAS_SL20 IP = haas3IP\n" + 
-				"Demeter IP = demeterIP\n" + 
+				"Machine : Demeter , IP = demeterIP\n" + 
+				"Machine : HAAS_VF2_5AXES , IP = haas1IP\n" + 
+				"Machine : HAAS_VF2_3AXES , IP = haas2IP\n" + 
+				"Machine : HAAS_SL20 , IP = haas3IP\n" + 
 				"Moxa port = 8080\n" + 
+				"Pooling period = 5\n"+
 				"**** End of configuration ****"; 
 		
 		assertEquals(printed, sut.toString());
 	}
 	
 	@Test
-	public void configByfile() {
-		sut  = new MonitoringConfiguration(null);
-		System.out.println(sut);
-		assertEquals(sut.getClusterNameES(), null);
-		assertEquals(sut.getHostES(), null);
-		assertEquals(sut.getPortES(), 0);
-		assertEquals(sut.getHostDMGSQL(), null);
-		assertEquals(sut.getHaas1IP(), null);
-		assertEquals(sut.getHaas2IP(), null);
-		assertEquals(sut.getHaas3IP(), null);
-		assertEquals(sut.getDemeterIP(), null);
-		assertEquals(sut.getMoxaPort(), 0);
+	public void configByfile() throws FileNotFoundException {
+		sut  = new MonitoringConfiguration("resources\\configTest.txt");
+		String machineNames[] = { "machine1" , "machine2" }; 
+		String IPs[] = { "IP1" , "IP2" }; 
 		
+		assertEquals(sut.getClusterNameES(), "elasticsearch");
+		assertEquals(sut.getHostES(), "localhost");
+		assertEquals(sut.getPortES(), 9300);
+		assertEquals(sut.getHostDMGSQL(), "bdd");
+		for(int i = 0 ; i < machineNames.length ; i++) {
+			assertEquals(sut.getMachineNames()[i], "machine"+(i+1));
+			assertEquals(sut.getIPs()[i], "IP"+(i+1));
+		}
+		assertEquals(sut.getMoxaPort(), 8080);
+		assertEquals(sut.getPoolingPeriod(), 5);
+	}
+	
+	@Test(expected= java.lang.NullPointerException.class)
+	public void configByNullFile() throws FileNotFoundException  {
+		sut = new MonitoringConfiguration(null); 
 	}
 	
 }

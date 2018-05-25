@@ -10,20 +10,26 @@ public class Monitoring {
 	private static MonitoringConfiguration config;
 	private static DMG dmg;
 	private static Moxa moxa;
+	private static String configFilePath; 
 
 	public static void main(String[] args) throws Exception {
 
 		// Get project configuration from config.txt
-		if (args.length == 0) {
-			config = new MonitoringConfiguration("E:\\Cours\\2A\\Projet 2A Monitoring\\config.txt");
-		} else if (args.length == 1) {
-			System.out.println("Configuration file charged = " + args[0]);
-			config = new MonitoringConfiguration(args[0]);
-			System.out.println(config);
-		} else {
-			System.out.println("You must add a configuration to run this project");
+		try {
+			if (args.length == 0) {
+				configFilePath = "D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt";
+				config = new MonitoringConfiguration(configFilePath);
+				System.out.println(config);
+			} else if (args.length == 1) {
+				System.out.println("Configuration file charged = " + args[0]);
+				config = new MonitoringConfiguration(args[0]);
+				System.out.println(config);
+			}
+		} catch (Exception e) {
+			System.out.println("Cannot read/parse txt file : " + configFilePath );
 			System.exit(0);
-		}
+		} 
+		
 
 		// Open connection to the DMG SQL Server
 		dmg = new DMG();
@@ -31,7 +37,9 @@ public class Monitoring {
 
 		// Open connection to the machines Moxa
 		moxa = new Moxa();
-		final String[] IPs = { config.getDemeterIP(), config.getHaas1IP(), config.getHaas2IP(), config.getHaas3IP() };
+		final String[] IPs = config.getIPs();
+		final String[] machineNames = config.getMachineNames();
+		final int moxaPort = config.getMoxaPort(); 
 
 		// Initialize ElasticSearch connection, creation of the index "update"
 		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
@@ -67,12 +75,12 @@ public class Monitoring {
 					}
 
 					// Moxa
-					ArrayList<MachineUpdate> updates = moxa.readTransaction(IPs, config.getMoxaPort());
+					ArrayList<MachineUpdate> updates = moxa.readTransaction(IPs, machineNames, moxaPort);
 					if (!updates.isEmpty()) {
 						System.out.println("New data from machines connected with a Moxa");
 						System.out.println("****** Loading new data ****** ");
 						for (MachineUpdate update : updates) {
-							ElasticSearchUtil.putData(update);
+							//ElasticSearchUtil.putData(update);
 							System.out.println(update);
 							i++;
 						}
@@ -92,7 +100,7 @@ public class Monitoring {
 		};
 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
-		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, 5, TimeUnit.SECONDS);
+		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
 
 	}
 
