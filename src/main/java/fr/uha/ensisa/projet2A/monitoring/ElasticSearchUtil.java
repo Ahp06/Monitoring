@@ -47,13 +47,6 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Close the client stream
-	 */
-	public static void closeElasticSearch() {
-		client.close();
-	}
-
-	/**
 	 * Return true if the index "update" already exist
 	 * 
 	 * @param indexName
@@ -120,27 +113,23 @@ public class ElasticSearchUtil {
 
 	/**
 	 * Index an update
-	 * @param firstUpdate 
+	 * 
+	 * @param firstUpdate
 	 * 
 	 * @throws IOException
 	 */
 	public static void indexUpdate(MachineUpdate firstUpdate) throws IOException {
-		// A changer -> créer l'index avec le premier élement à pousser dans la base 
+		// A changer -> créer l'index avec le premier élement à pousser dans la base
 		if (!isIndexRegistered()) {
-			client.prepareIndex("update", "MachineUpdate")
-					.setSource(XContentFactory.jsonBuilder().startObject()
-							.field("machineID", firstUpdate.getMachineID())
-							.field("machineName", firstUpdate.getMachineName())
-							.field("state", firstUpdate.getState())
-							.field("stateLabel", getStateLabel(firstUpdate.getState()))
-							.field("time", firstUpdate.getTime()).endObject())
-					.execute().actionGet();
+			client.prepareIndex("update", "MachineUpdate").setSource(XContentFactory.jsonBuilder().startObject()
+					.field("machineID", firstUpdate.getMachineID()).field("machineName", firstUpdate.getMachineName())
+					.field("state", firstUpdate.getState()).field("stateLabel", getStateLabel(firstUpdate.getState()))
+					.field("time", firstUpdate.getTime()).endObject()).execute().actionGet();
 		}
 	}
 
 	/**
-	 * Put data by parsing an object to JSON into the ElasticSearch index
-	 * "update"
+	 * Put data by parsing an object to JSON into the ElasticSearch index "update"
 	 * 
 	 * @param update
 	 * @throws IOException
@@ -175,23 +164,25 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Return true if the elasticsearch database is empty 
+	 * Return true if the elasticsearch database is empty
 	 * 
 	 * @return
 	 */
 	public static boolean isESDatabaseEmpty() {
-		// Ou seulement récupérer le premier ? 
+		// Ou seulement récupérer le premier ?
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
 				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0).get();
 
 		SearchHits hits = response.getHits();
-		long hitsCount = hits.getTotalHits(); 
+		long hitsCount = hits.getTotalHits();
 
 		return hitsCount == 0;
 	}
-	
+
 	/**
-	 * Return the timestamp string representation of the last modification into the database
+	 * Return the timestamp string representation of the last modification into the
+	 * database
+	 * 
 	 * @return
 	 * @throws InterruptedException
 	 * @throws ExecutionException
@@ -199,10 +190,10 @@ public class ElasticSearchUtil {
 	 */
 	public static String getLastUpdateTime() throws InterruptedException, ExecutionException, ParseException {
 
-		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate").
-				 setQuery(QueryBuilders.matchAllQuery()).setSize(1).addSort("time",SortOrder.DESC).get();
+		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
+				.setQuery(QueryBuilders.matchAllQuery()).setSize(1).addSort("time", SortOrder.DESC).get();
 		SearchHits hits = response.getHits();
-		if(hits.getTotalHits() !=0){
+		if (hits.getTotalHits() != 0) {
 			String last = hits.getAt(0).getSourceAsMap().get("time").toString();
 			// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to
 			// "yyyy-MM-dd HH:mm:ss.S"
@@ -212,12 +203,9 @@ public class ElasticSearchUtil {
 			String dateFormatted = outputFormatter.format(date);
 			return dateFormatted;
 		}
-		
+
 		return null;
-		
 
 	}
-	
-	
 
 }
