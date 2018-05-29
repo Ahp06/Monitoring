@@ -60,7 +60,7 @@ public class DMG {
 	}
 
 	/**
-	 * Return the timestamp of the last modification into the databse
+	 * Return the timestamp of the last modification into the database
 	 * 
 	 * @return
 	 * @throws SQLException

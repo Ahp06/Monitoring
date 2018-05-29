@@ -7,11 +7,9 @@ import java.io.FileNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vividsolutions.jts.util.Assert;
-
 public class MonitoringConfigurationTest {
 	
-	MonitoringConfiguration sut; 
+	private MonitoringConfiguration sut; 
 	
 	@Before 
 	public void create() {
@@ -50,8 +48,15 @@ public class MonitoringConfigurationTest {
 	
 	@Test 
 	public void setIPs() {
-		System.out.println(sut.getIPs());
-		//assertEquals(sut.getIPs(), );
+		String[] IPs = { "demeterIP","haas1IP","haas2IP","haas3IP", }; 
+		String[] newIPs = { "IP1", "IP2" }; 
+		for(int i = 0 ; i < sut.getIPs().length ; i++) {
+			assertEquals(sut.getIPs()[i], IPs[i]);
+		}
+		sut.setIPs(newIPs);
+		for(int i = 0 ; i < sut.getIPs().length ; i++) {
+			assertEquals(sut.getIPs()[i], newIPs[i]);
+		}
 	}
 	
 	@Test
@@ -91,7 +96,7 @@ public class MonitoringConfigurationTest {
 		assertEquals(sut.getHostDMGSQL(), "bdd");
 		for(int i = 0 ; i < machineNames.length ; i++) {
 			assertEquals(sut.getMachineNames()[i], "machine"+(i+1));
-			assertEquals(sut.getIPs()[i], "IP"+(i+1));
+			assertEquals(sut.getIPs()[i], IPs[i]);
 		}
 		assertEquals(sut.getMoxaPort(), 8080);
 		assertEquals(sut.getPoolingPeriod(), 5);

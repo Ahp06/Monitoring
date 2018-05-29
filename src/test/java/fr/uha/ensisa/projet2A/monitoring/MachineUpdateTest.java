@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class MachineUpdateTest {
 	
-	MachineUpdate sut; //System Under Test
+	private MachineUpdate sut; //System Under Test
         
     @Before
     public void createTest() {

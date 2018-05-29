@@ -75,7 +75,7 @@ public class Monitoring {
 					}
 
 					// Moxa
-					ArrayList<MachineUpdate> updates = moxa.readTransaction(IPs, machineNames, moxaPort);
+					ArrayList<MachineUpdate> updates = moxa.pooling(IPs, machineNames, moxaPort);
 					if (!updates.isEmpty()) {
 						System.out.println("New data from machines connected with a Moxa");
 						System.out.println("****** Loading new data ****** ");

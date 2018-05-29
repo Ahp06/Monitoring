@@ -18,7 +18,7 @@ public class MonitoringConfiguration {
 	private int poolingPeriod;
 
 	/**
-	 * Default constructor, not recommended use
+	 * Default constructor, use not recommended 
 	 */
 	public MonitoringConfiguration() {
 		this.clusterNameES = "elasticsearch";

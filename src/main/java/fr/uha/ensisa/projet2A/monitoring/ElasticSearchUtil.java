@@ -11,9 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
@@ -129,7 +127,7 @@ public class ElasticSearchUtil {
 	public static void indexUpdate(MachineUpdate firstUpdate) throws IOException {
 		// A changer -> créer l'index avec le premier élement à pousser dans la base 
 		if (!isIndexRegistered()) {
-			IndexResponse response = client.prepareIndex("update", "MachineUpdate")
+			client.prepareIndex("update", "MachineUpdate")
 					.setSource(XContentFactory.jsonBuilder().startObject()
 							.field("machineID", firstUpdate.getMachineID())
 							.field("machineName", firstUpdate.getMachineName())
@@ -155,18 +153,9 @@ public class ElasticSearchUtil {
 					.field("machineName", update.getMachineName()).field("state", update.getState())
 					.field("stateLabel", getStateLabel(update.getState())).field("time", update.getTime()).endObject());
 
-			IndexResponse response = client.index(indexRequest).actionGet();
+			client.index(indexRequest).actionGet();
 		}
 
-	}
-
-	/**
-	 * Delete a document with a specific index
-	 * 
-	 * @param id
-	 */
-	public static void deleteData(int id) {
-		DeleteResponse response = client.prepareDelete("update", "updateMachine", Integer.toString(id)).get();
 	}
 
 	/**
@@ -200,7 +189,14 @@ public class ElasticSearchUtil {
 
 		return hitsCount == 0;
 	}
-
+	
+	/**
+	 * Return the timestamp string representation of the last modification into the database
+	 * @return
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws ParseException
+	 */
 	public static String getLastUpdateTime() throws InterruptedException, ExecutionException, ParseException {
 
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate").

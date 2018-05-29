@@ -1,7 +1,6 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class MachineUpdate {
 

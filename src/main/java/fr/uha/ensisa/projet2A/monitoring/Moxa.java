@@ -3,10 +3,6 @@ package fr.uha.ensisa.projet2A.monitoring;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import net.wimpi.modbus.io.ModbusTCPTransaction;
 import net.wimpi.modbus.msg.ReadInputDiscretesRequest;
 import net.wimpi.modbus.msg.ReadInputDiscretesResponse;
@@ -27,7 +23,7 @@ public class Moxa {
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<MachineUpdate> readTransaction(String[] IPs, String[] machineNames, int port) throws Exception {
+	public ArrayList<MachineUpdate> pooling(String[] IPs, String[] machineNames, int port) throws Exception {
 
 		ArrayList<MachineUpdate> updates = new ArrayList<MachineUpdate>();
 		for (int i = 0; i < IPs.length; i++) {
@@ -60,7 +56,7 @@ public class Moxa {
 				if (state != -1) {
 					MachineUpdate update = new MachineUpdate();
 					update.setMachineName(machineNames[i]);
-					update.setMachineID(i+2); // ID = 1 is for DMG_CTX and ID = 0 isn't awarded 
+					update.setMachineID(i+2); // ID = 1 is for DMG_CTX and ID = 0 isn't attributed 
 					update.setState(state);
 					update.setStateLabel(ElasticSearchUtil.getStateLabel(update.getState()));
 					update.setTime(new Timestamp(System.currentTimeMillis()));
