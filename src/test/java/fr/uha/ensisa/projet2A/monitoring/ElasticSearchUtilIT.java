@@ -6,7 +6,7 @@ public class ElasticSearchUtilIT {
 	
 	@Test
 	public void initES() {
-		//ElasticSearchUtil.initElasticSearch("elasticsearch", "localhost", 9200);
+		ElasticSearchUtil.initElasticSearch("elasticsearch_integration", "localhost", 9400);
 	}
 
 }
