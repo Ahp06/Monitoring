@@ -192,7 +192,7 @@
             <local name="jps.executable"/>
             <local name="environment"/>
             <property environment="environment"/>
-            <property name="jps.executable" location="${environment.JAVA_HOME}/bin/jps"/>
+            <property name="jps.executable" value="${environment.JAVA_HOME}/bin/jps" />
             <exec executable="${jps.executable}" failonerror="true">
                 <arg value="-l"/>
                 <redirector outputproperty="jps.pidline">
@@ -239,12 +239,13 @@
     <target name="start-external-cluster" depends="setup-workspace">
         <startup-elasticsearch/>
     </target>
-
+	
+	
     <!-- unzip integ test artifact, install plugin, then start ES -->
-    <target name="start-external-cluster-with-plugin" depends="setup-workspace">
-        <!--  <install-plugin name="${project.artifactId}" file="${project.build.directory}/${project.artifactId}-${project.version}-bin.zip"/> -->
+    <!-- <target name="start-external-cluster-with-plugin" depends="setup-workspace">
+        <install-plugin name="${project.artifactId}" file="${project.build.directory}/${project.artifactId}-${project.version}.jar"/>
         <startup-elasticsearch/>
-    </target>
+    </target> -->
 
     <!-- installs a plugin into elasticsearch -->
     <macrodef name="install-plugin">

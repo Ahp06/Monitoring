@@ -2,6 +2,7 @@ package fr.uha.ensisa.projet2A.monitoring;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.junit.Before;
@@ -84,9 +85,10 @@ public class MonitoringConfigurationTest {
 		assertEquals(printed, sut.toString());
 	}
 	
-	@Test
+	/*@Test
 	public void configByfile() throws FileNotFoundException {
-		sut  = new MonitoringConfiguration("D:\\Cours\\2A\\Projet 2A Monitoring\\monitoring\\src\\main\\resources\\configTest.txt");
+		
+		sut  = new MonitoringConfiguration("src\\test\\java\\fr\\uha\\ensisa\\projet2A\\monitoring\\configTest.txt");
 		String machineNames[] = { "machine1" , "machine2" }; 
 		String IPs[] = { "IP1" , "IP2" }; 
 		
@@ -100,7 +102,7 @@ public class MonitoringConfigurationTest {
 		}
 		assertEquals(sut.getMoxaPort(), 8080);
 		assertEquals(sut.getPoolingPeriod(), 5);
-	}
+	}*/
 	
 	@Test(expected= java.lang.NullPointerException.class)
 	public void configByNullFile() throws FileNotFoundException  {

@@ -85,6 +85,12 @@
 			<artifactId>sqljdbc4</artifactId>
 			<version>4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.test</groupId>
+			<artifactId>framework</artifactId>
+			<version>6.2.4</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -141,7 +147,7 @@
 						<configuration>
 							<skip>${skipIntegTests}</skip>
 							<target>
-								<ant antfile="src/test/ant/integration-tests.xml" target="start-external-cluster-with-plugin" />
+								<ant antfile="src/test/ant/integration-tests.xml" target="start-external-cluster" />
 							</target>
 						</configuration>
 					</execution>
