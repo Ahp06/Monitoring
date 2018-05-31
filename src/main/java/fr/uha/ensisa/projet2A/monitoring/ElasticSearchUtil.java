@@ -45,6 +45,13 @@ public class ElasticSearchUtil {
 		}
 		System.out.println("Connection : " + clusterName + "@" + host + ":" + port + " established!");
 	}
+	
+	/**
+	 * Close the Elasticsearch client stream 
+	 */
+	public static void closeES(){
+		client.close();
+	}
 
 	/**
 	 * Return true if the index "update" already exist
@@ -61,7 +68,7 @@ public class ElasticSearchUtil {
 			return false;
 		}
 
-		System.out.println("Index already created!");
+		System.out.println("Index update exist");
 		return true;
 	}
 
@@ -126,6 +133,7 @@ public class ElasticSearchUtil {
 					.field("state", firstUpdate.getState()).field("stateLabel", getStateLabel(firstUpdate.getState()))
 					.field("time", firstUpdate.getTime()).endObject()).execute().actionGet();
 		}
+		System.out.println("Index update created");
 	}
 
 	/**
@@ -169,9 +177,8 @@ public class ElasticSearchUtil {
 	 * @return
 	 */
 	public static boolean isESDatabaseEmpty() {
-		// Ou seulement récupérer le premier ?
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termQuery("machineID", "1")).setSize(0).get();
+				.setQuery(QueryBuilders.matchAllQuery()).setSize(0).get();
 
 		SearchHits hits = response.getHits();
 		long hitsCount = hits.getTotalHits();
@@ -206,6 +213,10 @@ public class ElasticSearchUtil {
 
 		return null;
 
+	}
+
+	public static Client getClient() {
+		return client;
 	}
 
 }

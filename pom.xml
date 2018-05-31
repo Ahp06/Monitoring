@@ -11,17 +11,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<elasticsearch.groupid>org.elasticsearch.distribution.zip</elasticsearch.groupid>
-		<elasticsearch.version>6.2.4</elasticsearch.version>
-
-		<skipTests>false</skipTests>
-		<skipUnitTests>${skipTests}</skipUnitTests>
-		<skipIntegTests>${skipTests}</skipIntegTests>
-
-		<!-- For integration tests using ANT -->
-		<integ.http.port>9400</integ.http.port>
-		<integ.transport.port>9500</integ.transport.port>
-
 	</properties>
 
 
@@ -41,11 +30,18 @@
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>transport</artifactId>
 			<version>6.2.4</version>
+			
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -91,6 +87,11 @@
 			<version>6.2.4</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.plugin</groupId>
+			<artifactId>transport-netty4-client</artifactId>
+			<version>6.2.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -106,126 +107,27 @@
 				<version>3.7.0</version>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.1</version>
-				<executions>
-					<execution>
-						<id>integ-setup-dependencies</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<skip>${skipIntegTests}</skip>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${elasticsearch.groupid}</groupId>
-									<artifactId>elasticsearch</artifactId>
-									<version>${elasticsearch.version}</version>
-									<type>zip</type>
-								</artifactItem>
-							</artifactItems>
-							<useBaseVersion>true</useBaseVersion>
-							<outputDirectory>${project.build.directory}/integration-tests/binaries</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<!-- start up external cluster -->
-					<execution>
-						<id>integ-setup</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<skip>${skipIntegTests}</skip>
-							<target>
-								<ant antfile="src/test/ant/integration-tests.xml" target="start-external-cluster" />
-							</target>
-						</configuration>
-					</execution>
-					<!-- shut down external cluster -->
-					<execution>
-						<id>integ-teardown</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<skip>${skipIntegTests}</skip>
-							<target>
-								<ant antfile="src/test/ant/integration-tests.xml" target="stop-external-cluster" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.21.0</version>
-				<executions>
-					<execution>
-						<id>default-test</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.carrotsearch.randomizedtesting</groupId>
-				<artifactId>junit4-maven-plugin</artifactId>
-				<version>2.6.1</version>
-
 				<configuration>
-					<assertions enableSystemAssertions="false">
-						<enable />
-					</assertions>
-
-					<listeners>
-						<report-text />
-					</listeners>
+					<excludes>
+						<exclude>**/*IT.java</exclude>
+					</excludes>
 				</configuration>
-
 				<executions>
 					<execution>
-						<id>unit-tests</id>
-						<phase>test</phase>
+						<id>integration-test</id>
 						<goals>
-							<goal>junit4</goal>
+							<goal>test</goal>
 						</goals>
-						<inherited>true</inherited>
-						<configuration>
-							<skipTests>${skipUnitTests}</skipTests>
-							<includes>
-								<include>**/*Test.class</include>
-							</includes>
-							<excludes>
-								<exclude>**/*$*</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>integration-tests</id>
 						<phase>integration-test</phase>
-						<goals>
-							<goal>junit4</goal>
-						</goals>
-						<inherited>true</inherited>
 						<configuration>
-							<skipTests>${skipIntegTests}</skipTests>
-							<includes>
-								<include>**/*IT.class</include>
-							</includes>
 							<excludes>
-								<exclude>**/*$*</exclude>
+								<exclude>none</exclude>
 							</excludes>
+							<includes>
+								<include>**/*IT.java</include>
+							</includes>
 						</configuration>
 					</execution>
 				</executions>
