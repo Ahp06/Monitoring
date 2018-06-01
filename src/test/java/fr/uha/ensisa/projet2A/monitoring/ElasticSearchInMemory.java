@@ -1,10 +1,9 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Collections;
 
+import org.apache.commons.io.FileUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.InternalSettingsPreparer;
@@ -14,10 +13,9 @@ import org.elasticsearch.transport.Netty4Plugin;
 public class ElasticSearchInMemory {
 
 	private static Client client = null;
-    private static File tempDir = null;
     private static Node elasticSearchNode = null;
     
-    //Use of a transport plugin because "transport.type = local" isn't authorized anymore 
+    //Use of a transport plugin because "transport.type = local" isn't authorized anymore on ES version > 5.x 
     static class PluginNode extends Node {
     	       public PluginNode(Settings settings) {
     	           super(InternalSettingsPreparer.prepareEnvironment(settings, null), Collections.singletonList(Netty4Plugin.class));
@@ -30,10 +28,8 @@ public class ElasticSearchInMemory {
 
     public static void setUp() throws Exception {
     	
-    	File tempDir = new File("target\\elasticsearch-temp", Long.toString(System.nanoTime()));
-        //removeDirectory(tempDir);
-        //tempDir.mkdir();
-        System.out.println("writing to: " + tempDir);
+    	File tempDir = new File("target\\elasticsearch-temp", Long.toString(System.nanoTime()));    
+        System.out.println("Writing data to: " + tempDir);
  
         Settings settings = Settings.builder()
         		.put("cluster.name", "elasticsearch_integration")
@@ -57,20 +53,9 @@ public class ElasticSearchInMemory {
             elasticSearchNode.close();
         }
         /*if (tempDir != null) {
-            removeDirectory(tempDir);
+            FileUtils.cleanDirectory(tempDir); //Delete all files into "target\\elasticsearch-temp"
         }*/
     }
 
-    /*public static void removeDirectory(File dir) throws IOException {
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null && files.length > 0) {
-                for (File aFile : files) {
-                    removeDirectory(aFile);
-                }
-            }
-        } 
-        Files.delete(dir.toPath());        
-    }*/
 
 }

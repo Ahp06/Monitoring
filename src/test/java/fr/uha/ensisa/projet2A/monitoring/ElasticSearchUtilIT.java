@@ -5,19 +5,11 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-public class ElasticSearchUtilIT {
-	
-	@Before
-	public void createESInMemory() throws Exception {
-		ElasticSearchInMemory.setUp();
-		ElasticSearchUtil.initElasticSearch("elasticsearch_integration", "127.0.0.1", 9300);
-	}
-	
-	@Test
+public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests{
+
+	/*@Test
 	public void createIndex() throws IOException {
 		
 		MachineUpdate test = new MachineUpdate(); 
@@ -57,10 +49,5 @@ public class ElasticSearchUtilIT {
 		assertEquals(ElasticSearchUtil.isESDatabaseEmpty(), true);
 		ElasticSearchUtil.putData(data);
 		assertEquals(ElasticSearchUtil.isESDatabaseEmpty(), false);
-	}
-	
-	@After
-	public void deleteESInMemory() throws Exception {
-		ElasticSearchInMemory.tearDown();
-	}
+	}*/
 }
