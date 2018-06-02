@@ -1,9 +1,7 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
-import java.io.File;
 import java.util.Collections;
 
-import org.apache.commons.io.FileUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.InternalSettingsPreparer;
@@ -30,12 +28,14 @@ public class ElasticSearchInMemory {
 
 	public static void setUp() throws Exception {
 
-		File tempDir = new File("target\\elasticsearch-temp", Long.toString(System.nanoTime()));
-		System.out.println("Writing data to: " + tempDir);
-
-		Settings settings = Settings.builder().put("cluster.name", "elasticsearch_integration").put("path.home", ".")
-				.put("transport.type", "netty4").put("http.enabled", false)
-				.put("path.data", new File(tempDir, "data").getAbsolutePath()).put("http.type", "netty4").build();
+		Settings settings = Settings.builder()
+				.put("cluster.name", "elasticsearch_integration")
+				.put("bootstrap.memory_lock",true)
+				.put("path.home", "target")
+				.put("transport.type", "netty4")
+				.put("http.enabled", false)
+				.put("http.type", "netty4")
+				.build();
 
 		Node elasticSearchNode = new PluginNode(settings);
 
@@ -51,6 +51,10 @@ public class ElasticSearchInMemory {
 			elasticSearchNode.close();
 		}
 
+	}
+	
+	public static void refresh() {
+		getClient().admin().indices().prepareRefresh("update").execute().actionGet(); 
 	}
 
 }

@@ -14,6 +14,7 @@ public class ElasticSearchIntegrationTests {
 	@AfterClass
 	public static void closeESInMemory() throws Exception{
 		ElasticSearchInMemory.tearDown();
+		ElasticSearchUtil.closeES();
 	}
 
 }
