@@ -13,49 +13,44 @@ import org.elasticsearch.transport.Netty4Plugin;
 public class ElasticSearchInMemory {
 
 	private static Client client = null;
-    private static Node elasticSearchNode = null;
-    
-    //Use of a transport plugin because "transport.type = local" isn't authorized anymore on ES version > 5.x 
-    static class PluginNode extends Node {
-    	       public PluginNode(Settings settings) {
-    	           super(InternalSettingsPreparer.prepareEnvironment(settings, null), Collections.singletonList(Netty4Plugin.class));
-    	       }
-    	   }
+	private static Node elasticSearchNode = null;
 
-    public static Client getClient() {
-        return client;
-    }
+	// Use of a transport plugin because "transport.type = local" isn't authorized
+	// anymore on ES version > 5.x
+	static class PluginNode extends Node {
+		public PluginNode(Settings settings) {
+			super(InternalSettingsPreparer.prepareEnvironment(settings, null),
+					Collections.singletonList(Netty4Plugin.class));
+		}
+	}
 
-    public static void setUp() throws Exception {
-    	
-    	File tempDir = new File("target\\elasticsearch-temp", Long.toString(System.nanoTime()));    
-        System.out.println("Writing data to: " + tempDir);
- 
-        Settings settings = Settings.builder()
-        		.put("cluster.name", "elasticsearch_integration")
-        		.put("path.home", ".")
-        		.put("transport.type","netty4")
-                .put("http.enabled",false)
-                .put("path.data", new File(tempDir, "data").getAbsolutePath())
-                .build();
-        
-        Node elasticSearchNode = new PluginNode(settings);	
-       
-        elasticSearchNode.start();
-        client = elasticSearchNode.client();
-    }
+	public static Client getClient() {
+		return client;
+	}
 
-    public static void tearDown() throws Exception {
-        if (client != null) {
-            client.close();
-        }
-        if (elasticSearchNode != null) {
-            elasticSearchNode.close();
-        }
-        /*if (tempDir != null) {
-            FileUtils.cleanDirectory(tempDir); //Delete all files into "target\\elasticsearch-temp"
-        }*/
-    }
+	public static void setUp() throws Exception {
 
+		File tempDir = new File("target\\elasticsearch-temp", Long.toString(System.nanoTime()));
+		System.out.println("Writing data to: " + tempDir);
+
+		Settings settings = Settings.builder().put("cluster.name", "elasticsearch_integration").put("path.home", ".")
+				.put("transport.type", "netty4").put("http.enabled", false)
+				.put("path.data", new File(tempDir, "data").getAbsolutePath()).put("http.type", "netty4").build();
+
+		Node elasticSearchNode = new PluginNode(settings);
+
+		elasticSearchNode.start();
+		client = elasticSearchNode.client();
+	}
+
+	public static void tearDown() throws Exception {
+		if (client != null) {
+			client.close();
+		}
+		if (elasticSearchNode != null) {
+			elasticSearchNode.close();
+		}
+
+	}
 
 }

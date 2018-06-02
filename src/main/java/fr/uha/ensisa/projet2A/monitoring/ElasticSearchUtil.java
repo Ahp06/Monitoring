@@ -182,6 +182,7 @@ public class ElasticSearchUtil {
 
 		SearchHits hits = response.getHits();
 		long hitsCount = hits.getTotalHits();
+		System.out.println("Number of documents = " + hitsCount);
 
 		return hitsCount == 0;
 	}

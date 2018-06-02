@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests{
 
-	/*@Test
+	@Test
 	public void createIndex() throws IOException {
 		
 		MachineUpdate test = new MachineUpdate(); 
@@ -26,7 +26,7 @@ public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests{
 		assertEquals(ElasticSearchUtil.isIndexRegistered(), false);
 	}
 	
-	@Test
+	/*@Test
 	public void putDataIntoES() throws IOException {
 		
 		MachineUpdate test = new MachineUpdate(); 

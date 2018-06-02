@@ -17,7 +17,7 @@ public class Monitoring {
 		// Get project configuration from config.txt
 		try {
 			if (args.length == 0) {
-				configFilePath = "F:\\Cours\\2A\\Projet 2A Monitoring\\config.txt";
+				configFilePath = "D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt";
 				config = new MonitoringConfiguration(configFilePath);
 				System.out.println(config);
 			} else if (args.length == 1) {
@@ -30,29 +30,36 @@ public class Monitoring {
 			System.exit(0);
 		} 
 		
+		try {
+			ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
+			System.out.println("Empty = " + ElasticSearchUtil.isESDatabaseEmpty());
+		} catch(Exception e) {
+			System.out.println("Have you started Elasticsearch ?");
+		}
+		
 
 		// Open connection to the DMG SQL Server
-		dmg = new DMG();
-		dmg.openConnection(config.getHostDMGSQL());
+		//dmg = new DMG();
+		//dmg.openConnection(config.getHostDMGSQL());
 
 		// Open connection to the machines Moxa
-		moxa = new Moxa();
+		/*moxa = new Moxa();
 		final String[] IPs = config.getIPs();
 		final String[] machineNames = config.getMachineNames();
-		final int moxaPort = config.getMoxaPort(); 
+		final int moxaPort = config.getMoxaPort(); */
 
 		// Initialize ElasticSearch connection, creation of the index "update"
-		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
-		ElasticSearchUtil.indexUpdate(dmg.queryDBHistory().get(0));
+		//ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
+		//ElasticSearchUtil.indexUpdate(dmg.queryDBHistory().get(0));
 		
 		//Add of a first element into ES database 
-		if(ElasticSearchUtil.isESDatabaseEmpty()){
+		/*if(ElasticSearchUtil.isESDatabaseEmpty()){
 			ElasticSearchUtil.putData(dmg.queryDBHistory().get(1));
-		}
+		}*/
 
 		// Each 5 secondes, if the last modified date has changed then we load
 		// the new data
-		Runnable monitoringRunnable = new Runnable() {
+		/*Runnable monitoringRunnable = new Runnable() {
 			public void run() {
 				try {
 					// Init
@@ -100,7 +107,7 @@ public class Monitoring {
 		};
 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
-		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
+		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);*/
 
 	}
 
