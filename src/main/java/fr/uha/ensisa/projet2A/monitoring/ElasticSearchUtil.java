@@ -41,9 +41,9 @@ public class ElasticSearchUtil {
 					.addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
+			System.out.println("Connection : " + clusterName + "@" + host + ":" + port + " failed");
 			e.printStackTrace();
 		}
-		System.out.println("Connection : " + clusterName + "@" + host + ":" + port + " established!");
 	}
 	
 	/**

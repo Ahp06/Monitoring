@@ -24,8 +24,8 @@ public class DMG {
 			this.connection = DriverManager.getConnection(url);
 			System.out.println("Connected to database");
 		} catch (Exception e) {
-			System.out.println("Connection failed");
-			//e.printStackTrace();
+			System.out.println("Connection to SQL DMG host failed");
+			e.printStackTrace();
 		}
 
 	}

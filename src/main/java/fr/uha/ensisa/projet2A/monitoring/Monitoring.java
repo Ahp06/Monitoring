@@ -10,14 +10,14 @@ public class Monitoring {
 	private static MonitoringConfiguration config;
 	private static DMG dmg;
 	private static Moxa moxa;
-	private static String configFilePath; 
+	private static String configFilePath;
 
 	public static void main(String[] args) throws Exception {
 
 		// Get project configuration from config.txt
 		try {
 			if (args.length == 0) {
-				configFilePath = "D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt";
+				configFilePath = "/users/benjamin/desktop/config.txt";
 				config = new MonitoringConfiguration(configFilePath);
 				System.out.println(config);
 			} else if (args.length == 1) {
@@ -26,34 +26,33 @@ public class Monitoring {
 				System.out.println(config);
 			}
 		} catch (Exception e) {
-			System.out.println("Cannot read/parse txt file : " + configFilePath );
+			System.out.println("Cannot read/parse txt file : " + configFilePath);
 			System.exit(0);
-		} 
-		
-		try {
-			ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
-			System.out.println("Empty = " + ElasticSearchUtil.isESDatabaseEmpty());
-		} catch(Exception e) {
-			System.out.println("Have you started Elasticsearch ?");
 		}
 		
+		//Initialization of ES connection 
+		try {
+			ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
+		} catch (Exception e) {
+			System.out.println("Have you started Elasticsearch ?");
+			e.printStackTrace();
+		}
 
 		// Open connection to the DMG SQL Server
 		dmg = new DMG();
 		dmg.openConnection(config.getHostDMGSQL());
 
+		// Indexation
+		ElasticSearchUtil.indexUpdate(dmg.queryDBHistory().get(0));
+
 		// Open connection to the machines Moxa
 		moxa = new Moxa();
 		final String[] IPs = config.getIPs();
 		final String[] machineNames = config.getMachineNames();
-		final int moxaPort = config.getMoxaPort(); 
+		final int moxaPort = config.getMoxaPort();
 
-		// Initialize ElasticSearch connection, creation of the index "update"
-		ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
-		ElasticSearchUtil.indexUpdate(dmg.queryDBHistory().get(0));
-		
-		//Add of a first element into ES database 
-		if(ElasticSearchUtil.isESDatabaseEmpty()){
+		// Add of a first element into ES database
+		if (ElasticSearchUtil.isESDatabaseEmpty()) {
 			ElasticSearchUtil.putData(dmg.queryDBHistory().get(1));
 		}
 
@@ -87,7 +86,7 @@ public class Monitoring {
 						System.out.println("New data from machines connected with a Moxa");
 						System.out.println("****** Loading new data ****** ");
 						for (MachineUpdate update : updates) {
-							//ElasticSearchUtil.putData(update);
+							ElasticSearchUtil.putData(update);
 							System.out.println(update);
 							i++;
 						}
@@ -105,7 +104,8 @@ public class Monitoring {
 			}
 
 		};
-
+		
+		//Pooling 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
 		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
 
