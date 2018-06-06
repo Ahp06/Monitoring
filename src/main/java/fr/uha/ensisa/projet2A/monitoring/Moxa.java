@@ -48,15 +48,19 @@ public class Moxa {
 				} else if (rres.getDiscreteStatus(0) == true && rres.getDiscreteStatus(1) == true) {
 					state = 3; // Off
 				} else if (rres.getDiscreteStatus(0) == true && rres.getDiscreteStatus(1) == false) {
-					state = 2; // Run 
+					state = 2; // Run
 				} else if (rres.getDiscreteStatus(0) == false && rres.getDiscreteStatus(1) == true) {
-					state = 3; // Off 
+					state = 3; // Off
+				}
+
+				if (state == ElasticSearchUtil.getLastStateByMachineID(i + 2)) {
+					state = -1;
 				}
 
 				if (state != -1) {
 					MachineUpdate update = new MachineUpdate();
 					update.setMachineName(machineNames[i]);
-					update.setMachineID(i+2); // ID = 1 is for DMG_CTX and ID = 0 isn't attributed 
+					update.setMachineID(i + 2); // ID = 1 is for DMG_CTX and ID = 0 isn't attributed
 					update.setState(state);
 					update.setStateLabel(ElasticSearchUtil.getStateLabel(update.getState()));
 					update.setTime(new Timestamp(System.currentTimeMillis()));

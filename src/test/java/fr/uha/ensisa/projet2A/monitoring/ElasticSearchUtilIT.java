@@ -42,6 +42,7 @@ public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests {
 
 		// Retrieving the date of the last update
 		assertEquals(ElasticSearchUtil.getLastUpdateTime(), current.toString());
+		assertEquals(ElasticSearchUtil.getLastStateByMachineID(data1.getMachineID()),0);
 
 		// Delete index
 		ElasticSearchUtil.deleteIndex("update");

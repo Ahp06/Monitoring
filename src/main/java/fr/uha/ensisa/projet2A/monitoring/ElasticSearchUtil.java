@@ -13,11 +13,13 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -45,11 +47,11 @@ public class ElasticSearchUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Close the Elasticsearch client stream 
+	 * Close the Elasticsearch client stream
 	 */
-	public static void closeES(){
+	public static void closeES() {
 		client.close();
 	}
 
@@ -182,7 +184,6 @@ public class ElasticSearchUtil {
 
 		SearchHits hits = response.getHits();
 		long hitsCount = hits.getTotalHits();
-		System.out.println("Number of documents = " + hitsCount);
 
 		return hitsCount == 0;
 	}
@@ -214,6 +215,25 @@ public class ElasticSearchUtil {
 
 		return null;
 
+	}
+
+	/**
+	 * Only for machines connected with a Moxa. 
+	 * Return the last machine state by his ID
+	 * 
+	 * @param update
+	 * @return
+	 */
+	public static int getLastStateByMachineID(int machineID) {
+
+		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
+				.setQuery(QueryBuilders.termsQuery("machineID", Integer.toString(machineID))).setSize(1)
+				.addSort("time", SortOrder.DESC).get();
+
+		SearchHits hits = response.getHits();
+		String lastState = hits.getAt(0).getSourceAsMap().get("state").toString();
+		
+		return Integer.parseInt(lastState);
 	}
 
 	public static Client getClient() {

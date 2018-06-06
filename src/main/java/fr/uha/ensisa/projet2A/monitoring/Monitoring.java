@@ -17,7 +17,7 @@ public class Monitoring {
 		// Get project configuration from config.txt
 		try {
 			if (args.length == 0) {
-				configFilePath = "/users/benjamin/desktop/config.txt";
+				configFilePath = "D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt";
 				config = new MonitoringConfiguration(configFilePath);
 				System.out.println(config);
 			} else if (args.length == 1) {

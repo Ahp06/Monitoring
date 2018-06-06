@@ -22,7 +22,7 @@ public class DMG {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			this.connection = DriverManager.getConnection(url);
-			System.out.println("Connected to database");
+			System.out.println("Connected to SQL DMG database");
 		} catch (Exception e) {
 			System.out.println("Connection to SQL DMG host failed");
 			e.printStackTrace();
