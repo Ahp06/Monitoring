@@ -85,10 +85,10 @@ public class MonitoringConfigurationTest {
 		assertEquals(printed, sut.toString());
 	}
 	
-	/*@Test
+	@Test
 	public void configByfile() throws FileNotFoundException {
 		
-		sut  = new MonitoringConfiguration("src\\test\\java\\fr\\uha\\ensisa\\projet2A\\monitoring\\configTest.txt");
+		sut  = new MonitoringConfiguration("src\\main\\resources\\configTest.txt");
 		String machineNames[] = { "machine1" , "machine2" }; 
 		String IPs[] = { "IP1" , "IP2" }; 
 		
@@ -102,7 +102,7 @@ public class MonitoringConfigurationTest {
 		}
 		assertEquals(sut.getMoxaPort(), 8080);
 		assertEquals(sut.getPoolingPeriod(), 5);
-	}*/
+	}
 	
 	@Test(expected= java.lang.NullPointerException.class)
 	public void configByNullFile() throws FileNotFoundException  {

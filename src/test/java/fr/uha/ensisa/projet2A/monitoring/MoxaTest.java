@@ -1,36 +1,47 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import org.junit.Before;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
-import net.wimpi.modbus.Modbus;
-import net.wimpi.modbus.net.ModbusTCPListener;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import net.wimpi.modbus.net.TCPMasterConnection;
 
-public class MoxaTest {
+public class MoxaTest extends TCPMasterConnectionWrapper {
 
-	/*private Moxa sut;
+	@Test
+	public void testConnectAndClose() throws Exception {
+		final TCPMasterConnection mockConnection = Mockito.mock(TCPMasterConnection.class);
+		Mockito.doAnswer(new Answer() {
 
-	private int moxaPort = Modbus.DEFAULT_PORT;
-	private String[] machineNames = { "default" };
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Mockito.when(mockConnection.isConnected()).thenReturn(Boolean.TRUE);
+				return null;
+			}
+		}).when(mockConnection).connect();
+		Mockito.doAnswer(new Answer() {
 
-	@Mock
-	private TCPMasterConnection mockConnection;
-
-	@Before
-	public void create() throws IOException {
-		sut = new Moxa();
-		/*InetAddress addr = Mockito.mock(InetAddress.class); 
-		Mockito.when(addr.isReachable(3000)).thenReturn(Boolean.TRUE); 
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Mockito.when(mockConnection.isConnected()).thenReturn(Boolean.FALSE);
+				return null;
+			}
+		}).when(mockConnection).close();
+		assertFalse(mockConnection.isConnected());
+		mockConnection.connect();
+		assertTrue(mockConnection.isConnected());
+		mockConnection.close();
+		assertFalse(mockConnection.isConnected());
 	}
 
 	@Test
-	public void poolingTest() throws Exception {
-
-		String[] IPs = { InetAddress.getByName("10.10.10.10").getHostAddress() }; // Why localhost doesn't work ? 
-
-		sut.pooling(IPs, machineNames, moxaPort);
-	}*/
+	public void testIsConnected() {
+		TCPMasterConnection mockConnection = Mockito.mock(TCPMasterConnection.class);
+		Mockito.when(mockConnection.isConnected()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+		assertTrue(mockConnection.isConnected());
+		assertFalse(mockConnection.isConnected());
+	}
 
 }

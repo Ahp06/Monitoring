@@ -9,16 +9,17 @@
 	<name>monitoring</name>
 	<url>http://maven.apache.org</url>
 
-	<repositories>
+	<!-- <repositories>
 		<repository>
 			<id>clojars</id>
 			<url>http://clojars.org/repo/</url>
 		</repository>
-	</repositories>
+	</repositories> -->
 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<elasticsearch.version>6.2.4</elasticsearch.version>
 	</properties>
 
 	<dependencies>
@@ -30,12 +31,12 @@
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<version>6.2.4</version>
+			<version>${elasticsearch.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>transport</artifactId>
-			<version>6.2.4</version>
+			<version>${elasticsearch.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -47,17 +48,6 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.5.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -82,20 +72,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.elasticsearch.test</groupId>
-			<artifactId>framework</artifactId>
-			<version>6.2.4</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.elasticsearch.plugin</groupId>
 			<artifactId>transport-netty4-client</artifactId>
-			<version>6.2.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.3.2</version>
+			<version>${elasticsearch.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
@@ -162,12 +141,6 @@
 									<mainClass>fr.uha.ensisa.projet2A.monitoring.Monitoring</mainClass>
 								</transformer>
 							</transformers>
-							<!-- <archive>
-								<manifest>
-									<addClasspath>true</addClasspath>
-									<mainClass>fr.uha.ensisa.projet2A.monitoring.Monitoring</mainClass>
-								</manifest>
-							</archive> -->
 						</configuration>
 					</execution>
 				</executions>

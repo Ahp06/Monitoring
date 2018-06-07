@@ -1,9 +1,12 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 public class Monitoring {
 
@@ -29,8 +32,8 @@ public class Monitoring {
 			System.out.println("Cannot read/parse txt file : " + configFilePath);
 			System.exit(0);
 		}
-		
-		//Initialization of ES connection 
+
+		// Initialization of ES connection
 		try {
 			ElasticSearchUtil.initElasticSearch(config.getClusterNameES(), config.getHostES(), config.getPortES());
 		} catch (Exception e) {
@@ -97,6 +100,16 @@ public class Monitoring {
 						System.out.println("******" + i + " file(s) charged into ElasticSearch database ******");
 					}
 
+				} catch (SQLServerException e) {
+					try {
+						if (dmg.getConnection().isClosed()) {
+							System.out.println("Connection lost with SQL Server. Reboot...");
+							dmg.openConnection(config.getHostDMGSQL());
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -104,8 +117,8 @@ public class Monitoring {
 			}
 
 		};
-		
-		//Pooling 
+
+		// Pooling
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
 		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
 
