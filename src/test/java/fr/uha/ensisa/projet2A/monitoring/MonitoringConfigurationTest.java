@@ -88,7 +88,7 @@ public class MonitoringConfigurationTest {
 	@Test
 	public void configByfile() throws FileNotFoundException {
 		
-		sut  = new MonitoringConfiguration("src\\main\\resources\\configTest.txt");
+		sut  = new MonitoringConfiguration("resources\\configTest.txt");
 		String machineNames[] = { "machine1" , "machine2" }; 
 		String IPs[] = { "IP1" , "IP2" }; 
 		

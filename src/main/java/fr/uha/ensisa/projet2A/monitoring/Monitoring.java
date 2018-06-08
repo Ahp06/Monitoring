@@ -121,7 +121,12 @@ public class Monitoring {
 		// Pooling
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
 		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
-
+		
+		/*//Code à tester, séparer pooling moxa et dmg + réduire la période à 1 seconde
+		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(2);
+		monitoringExecutor.scheduleAtFixedRate(dmgRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
+		monitoringExecutor.scheduleAtFixedRate(moxaRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
+		*/
 	}
 
 }

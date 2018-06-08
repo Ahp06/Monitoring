@@ -16,7 +16,7 @@ import net.wimpi.modbus.net.TCPMasterConnection;
 public class MoxaTest extends TCPMasterConnectionWrapper {
 
 	@Test
-	public void testConnectAndClose() throws Exception {
+	public void connectAndClose() throws Exception {
 		final TCPMasterConnection mockConnection = Mockito.mock(TCPMasterConnection.class);
 		Mockito.doAnswer(new Answer() {
 
@@ -40,7 +40,7 @@ public class MoxaTest extends TCPMasterConnectionWrapper {
 	}
 
 	@Test
-	public void testIsConnected() {
+	public void isConnected() {
 		TCPMasterConnection mockConnection = Mockito.mock(TCPMasterConnection.class);
 		Mockito.when(mockConnection.isConnected()).thenReturn(Boolean.TRUE, Boolean.FALSE);
 		assertTrue(mockConnection.isConnected());
@@ -53,9 +53,8 @@ public class MoxaTest extends TCPMasterConnectionWrapper {
 		String[] machineNames = { "local" }; 
 		int port = Modbus.DEFAULT_PORT; 
 		
-		/*moxa.getRres().setDiscreteStatus(0, false);
-		moxa.getRres().setDiscreteStatus(1, true);
-		moxa.pooling(IPs, machineNames, port); */
+	
+		moxa.pooling(IPs, machineNames, port);
 	}
 
 }
