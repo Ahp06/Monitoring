@@ -78,4 +78,28 @@ public class Moxa {
 
 	}
 
+	public ModbusTCPTransaction getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(ModbusTCPTransaction transaction) {
+		this.transaction = transaction;
+	}
+
+	public ReadInputDiscretesRequest getRreq() {
+		return rreq;
+	}
+
+	public void setRreq(ReadInputDiscretesRequest rreq) {
+		this.rreq = rreq;
+	}
+
+	public ReadInputDiscretesResponse getRres() {
+		return rres;
+	}
+
+	public void setRres(ReadInputDiscretesResponse rres) {
+		this.rres = rres;
+	}
+
 }

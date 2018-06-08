@@ -53,7 +53,9 @@ public class MoxaTest extends TCPMasterConnectionWrapper {
 		String[] machineNames = { "local" }; 
 		int port = Modbus.DEFAULT_PORT; 
 		
-		moxa.pooling(IPs, machineNames, port); 
+		/*moxa.getRres().setDiscreteStatus(0, false);
+		moxa.getRres().setDiscreteStatus(1, true);
+		moxa.pooling(IPs, machineNames, port); */
 	}
 
 }

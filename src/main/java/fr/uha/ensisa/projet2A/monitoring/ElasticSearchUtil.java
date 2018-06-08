@@ -13,13 +13,11 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -69,8 +67,6 @@ public class ElasticSearchUtil {
 		if (!response.isExists()) {
 			return false;
 		}
-
-		System.out.println("Index update exist");
 		return true;
 	}
 
@@ -136,7 +132,7 @@ public class ElasticSearchUtil {
 					.field("state", firstUpdate.getState()).field("stateLabel", getStateLabel(firstUpdate.getState()))
 					.field("time", firstUpdate.getTime()).endObject()).execute().actionGet();
 		}
-		System.out.println("Index update created");
+		System.out.println("Indexation of ES done");
 	}
 
 	/**
