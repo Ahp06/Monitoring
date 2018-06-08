@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import net.wimpi.modbus.Modbus;
 import net.wimpi.modbus.net.TCPMasterConnection;
 
 public class MoxaTest extends TCPMasterConnectionWrapper {
@@ -42,6 +43,14 @@ public class MoxaTest extends TCPMasterConnectionWrapper {
 		Mockito.when(mockConnection.isConnected()).thenReturn(Boolean.TRUE, Boolean.FALSE);
 		assertTrue(mockConnection.isConnected());
 		assertFalse(mockConnection.isConnected());
+	}
+
+	@Test 
+	public void poolingTest() throws Exception{
+		String[] IPs = { "10.10.10.10" };
+		String[] machineNames = { "local" }; 
+		int port = Modbus.DEFAULT_PORT; 
+		moxa.pooling(IPs, machineNames, port); 
 	}
 
 }

@@ -128,7 +128,8 @@ public class ElasticSearchUtil {
 	 * @throws IOException
 	 */
 	public static void indexUpdate(MachineUpdate firstUpdate) throws IOException {
-		// A changer -> créer l'index avec le premier élement à pousser dans la base
+		// A changer -> créer l'index avec le premier élement à pousser dans la
+		// base
 		if (!isIndexRegistered()) {
 			client.prepareIndex("update", "MachineUpdate").setSource(XContentFactory.jsonBuilder().startObject()
 					.field("machineID", firstUpdate.getMachineID()).field("machineName", firstUpdate.getMachineName())
@@ -139,7 +140,8 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Put data by parsing an object to JSON into the ElasticSearch index "update"
+	 * Put data by parsing an object to JSON into the ElasticSearch index
+	 * "update"
 	 * 
 	 * @param update
 	 * @throws IOException
@@ -189,8 +191,8 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Return the timestamp string representation of the last modification into the
-	 * database
+	 * Return the timestamp string representation of the last modification into
+	 * the database
 	 * 
 	 * @return
 	 * @throws InterruptedException
@@ -218,22 +220,27 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Only for machines connected with a Moxa. 
-	 * Return the last machine state by his ID
+	 * Only for machines connected with a Moxa. Return the last machine state by
+	 * his ID
 	 * 
 	 * @param update
 	 * @return
 	 */
 	public static int getLastStateByMachineID(int machineID) {
 
-		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.termsQuery("machineID", Integer.toString(machineID))).setSize(1)
-				.addSort("time", SortOrder.DESC).get();
+		try {
+			SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
+					.setQuery(QueryBuilders.termsQuery("machineID", Integer.toString(machineID))).setSize(1)
+					.addSort("time", SortOrder.DESC).get();
+			SearchHits hits = response.getHits();
+			String lastState = hits.getAt(0).getSourceAsMap().get("state").toString();
+			
+			return Integer.parseInt(lastState);
+			
+		} catch (Exception e) {
+			return -1;
+		}
 
-		SearchHits hits = response.getHits();
-		String lastState = hits.getAt(0).getSourceAsMap().get("state").toString();
-		
-		return Integer.parseInt(lastState);
 	}
 
 	public static Client getClient() {
