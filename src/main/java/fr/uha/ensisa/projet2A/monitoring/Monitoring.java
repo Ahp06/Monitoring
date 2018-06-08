@@ -69,8 +69,8 @@ public class Monitoring {
 					String lastSQLDate = dmg.getLastUpdateTime();
 					int i = 0;
 
-					// System.out.println("lastESDate = " + lastESDate);
-					// System.out.println("lastSQLDate = " + lastSQLDate);
+					System.out.println("lastESDate = " + lastESDate);
+					System.out.println("lastSQLDate = " + lastSQLDate);
 
 					// DMG
 					if (lastESDate != null && !lastESDate.equals(lastSQLDate)) {

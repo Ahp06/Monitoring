@@ -3,6 +3,8 @@ package fr.uha.ensisa.projet2A.monitoring;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.net.InetAddress;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -47,9 +49,10 @@ public class MoxaTest extends TCPMasterConnectionWrapper {
 
 	@Test 
 	public void poolingTest() throws Exception{
-		String[] IPs = { "10.10.10.10" };
+		String[] IPs = { InetAddress.getLocalHost().getHostAddress() };
 		String[] machineNames = { "local" }; 
 		int port = Modbus.DEFAULT_PORT; 
+		
 		moxa.pooling(IPs, machineNames, port); 
 	}
 

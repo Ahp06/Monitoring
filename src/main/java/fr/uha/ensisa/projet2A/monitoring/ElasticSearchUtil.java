@@ -191,7 +191,7 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Return the timestamp string representation of the last modification into
+	 * Only for the DMG CTX. Return the timestamp string representation of the last modification into
 	 * the database
 	 * 
 	 * @return
@@ -202,7 +202,7 @@ public class ElasticSearchUtil {
 	public static String getLastUpdateTime() throws InterruptedException, ExecutionException, ParseException {
 
 		SearchResponse response = client.prepareSearch("update").setTypes("MachineUpdate")
-				.setQuery(QueryBuilders.matchAllQuery()).setSize(1).addSort("time", SortOrder.DESC).get();
+				.setQuery(QueryBuilders.termsQuery("machineID", "1")).setSize(1).addSort("time", SortOrder.DESC).get();
 		SearchHits hits = response.getHits();
 		if (hits.getTotalHits() != 0) {
 			String last = hits.getAt(0).getSourceAsMap().get("time").toString();
