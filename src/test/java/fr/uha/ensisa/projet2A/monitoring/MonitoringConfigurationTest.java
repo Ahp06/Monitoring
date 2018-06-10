@@ -70,7 +70,7 @@ public class MonitoringConfigurationTest {
 	@Test
 	public void show() {
 		String printed = "**** Monitoring configuration : ****\n" + 
-				"Elasticsearch cluster name   = clusterName\n" + 
+				"Elasticsearch cluster name = clusterName\n" + 
 				"Elasticsearch host = localhost\n" + 
 				"Elasticsearch port = 9200\n" + 
 				"DMG SQL server host  = bdd\n" + 

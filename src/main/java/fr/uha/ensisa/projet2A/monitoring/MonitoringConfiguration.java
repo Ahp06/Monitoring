@@ -148,7 +148,7 @@ public class MonitoringConfiguration {
 	public String toString() {
 
 		StringBuilder tmp = new StringBuilder("**** Monitoring configuration : ****\n");
-		tmp.append("Elasticsearch cluster name   = " + this.clusterNameES + "\n");
+		tmp.append("Elasticsearch cluster name = " + this.clusterNameES + "\n");
 		tmp.append("Elasticsearch host = " + this.hostES + "\n");
 		tmp.append("Elasticsearch port = " + this.portES + "\n");
 		tmp.append("DMG SQL server host  = " + this.hostDMGSQL + "\n");

@@ -1,12 +1,13 @@
 package fr.uha.ensisa.projet2A.monitoring;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 public class Monitoring {
 
@@ -17,7 +18,7 @@ public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
 
-		// Get project configuration from config.txt
+		// Get project configuration from your configuration file
 		try {
 			if (args.length == 0) {
 				configFilePath = "D:\\Cours\\2A\\Projet 2A Monitoring\\config.txt";
@@ -59,9 +60,9 @@ public class Monitoring {
 			ElasticSearchUtil.putData(dmg.queryDBHistory().get(1));
 		}
 
-		// Each 5 secondes, if the last modified date has changed then we load
-		// the new data
-		Runnable monitoringRunnable = new Runnable() {
+		Runnable dmgRunnable = new Runnable() {
+
+			@Override
 			public void run() {
 				try {
 					// Init
@@ -83,7 +84,32 @@ public class Monitoring {
 						}
 					}
 
-					// Moxa
+					if (i == 0) {
+						System.out.println("****** No data from the DMG CTX SQL server ******");
+					} else {
+						System.out.println("******" + i + " update(s) charged from the DMG CTX SQL server  ******");
+					}
+
+				} catch (InterruptedException | ExecutionException | ParseException | SQLException | IOException e) {
+					try {
+						if (dmg.getConnection().isClosed()) {
+							System.out.println("Connection lost with SQL Server. Reboot...");
+							dmg.openConnection(config.getHostDMGSQL());
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		};
+
+		Runnable moxaRunnable = new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					int i = 0;
 					ArrayList<MachineUpdate> updates = moxa.pooling(IPs, machineNames, moxaPort);
 					if (!updates.isEmpty()) {
 						System.out.println("New data from machines connected with a Moxa");
@@ -95,38 +121,21 @@ public class Monitoring {
 						}
 					}
 					if (i == 0) {
-						System.out.println("****** Elasticsearch database up to date ******");
+						System.out.println("****** No data from machines connected with a moxa ******");
 					} else {
-						System.out.println("******" + i + " file(s) charged into ElasticSearch database ******");
+						System.out.println("******" + i + " update(s) charged from machines connected with a moxa ******");
 					}
 
-				} catch (SQLServerException e) {
-					try {
-						if (dmg.getConnection().isClosed()) {
-							System.out.println("Connection lost with SQL Server. Reboot...");
-							dmg.openConnection(config.getHostDMGSQL());
-						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
 				}
 			}
-
 		};
 
-		// Pooling
-		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(1);
-		monitoringExecutor.scheduleAtFixedRate(monitoringRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
-		
-		/*//Code à tester, séparer pooling moxa et dmg + réduire la période à 1 seconde
+		//Pooling 1 sec ? 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(2);
 		monitoringExecutor.scheduleAtFixedRate(dmgRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
 		monitoringExecutor.scheduleAtFixedRate(moxaRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
-		*/
-	}
 
+	}
 }

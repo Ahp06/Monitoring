@@ -47,14 +47,13 @@ public class MoxaTest extends TCPMasterConnectionWrapper {
 		assertFalse(mockConnection.isConnected());
 	}
 
-	@Test 
+	/*@Test 
 	public void poolingTest() throws Exception{
 		String[] IPs = { InetAddress.getLocalHost().getHostAddress() };
 		String[] machineNames = { "local" }; 
 		int port = Modbus.DEFAULT_PORT; 
 		
-	
 		moxa.pooling(IPs, machineNames, port);
-	}
+	}*/
 
 }
