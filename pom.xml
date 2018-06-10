@@ -9,12 +9,12 @@
 	<name>monitoring</name>
 	<url>http://maven.apache.org</url>
 
-	<!-- <repositories>
+	<repositories>
 		<repository>
 			<id>clojars</id>
 			<url>http://clojars.org/repo/</url>
 		</repository>
-	</repositories> -->
+	</repositories>
 
 
 	<properties>
@@ -77,9 +77,9 @@
 			<version>${elasticsearch.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>sqljdbc4</artifactId>
-			<version>4.0</version>
+			<groupId>org.formcept</groupId>
+			<artifactId>sqljdbc42</artifactId>
+			<version>4.2</version>
 		</dependency>
 	</dependencies>
 
