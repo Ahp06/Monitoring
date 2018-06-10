@@ -1,9 +1,3 @@
 language: java
 jdk: oraclejdk8
-script: 
-- mvn clean verify
-- bash <(curl -s https://codecov.io/bash)
-
-cache:
-  directories:
-  	- $HOME/.m2
+script: mvn clean verify
