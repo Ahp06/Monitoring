@@ -4,9 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import ch.qos.logback.core.util.FileUtil;
 
 public class MonitoringConfigurationTest {
 
@@ -79,9 +84,12 @@ public class MonitoringConfigurationTest {
 	}
 
 	@Test
-	public void configByfile() throws FileNotFoundException {
+	public void configByfile() throws FileNotFoundException, URISyntaxException {
 		
-		sut = new MonitoringConfiguration("../configTest.txt");
+		URL url = this.getClass().getClassLoader().getResource("configTest.txt"); 
+		File file = FileUtils.toFile(url); 
+		
+		sut = new MonitoringConfiguration(file.getAbsolutePath());
 		
 		String machineNames[] = { "machine1", "machine2" };
 		String IPs[] = { "IP1", "IP2" };
