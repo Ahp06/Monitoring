@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Ahp06/Monitoring.svg?branch=master)](https://travis-ci.org/Ahp06/Monitoring)
+
 # Monitoring
 Monitoring of the ENSISA mechanics workshop developed with Java, ElasticSearch and Grafana.
 
