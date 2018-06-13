@@ -11,8 +11,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.qos.logback.core.util.FileUtil;
-
 public class MonitoringConfigurationTest {
 
 	private MonitoringConfiguration sut;
@@ -87,10 +85,13 @@ public class MonitoringConfigurationTest {
 	public void configByfile() throws FileNotFoundException, URISyntaxException {
 		
 		URL url = this.getClass().getClassLoader().getResource("configTest.txt"); 
+		// Without this line the url is "D:/Cours/2A/Projet%202A%20Monitoring/Monitoring/target/test-classes/configTest.txt"
+		// and because of "Project%202A%20" characters this test was throwing a FileNotFoundException 
 		File file = FileUtils.toFile(url); 
 		
-		sut = new MonitoringConfiguration(file.getAbsolutePath());
 		
+		
+		sut = new MonitoringConfiguration(file.getAbsolutePath());
 		String machineNames[] = { "machine1", "machine2" };
 		String IPs[] = { "IP1", "IP2" };
 
