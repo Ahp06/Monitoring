@@ -44,7 +44,13 @@ public class Monitoring {
 
 		// Open connection to the DMG SQL Server
 		dmg = new DMG();
-		dmg.openConnection(config.getHostDMGSQL());
+		try{
+			dmg.openConnection(config.getHostDMGSQL());
+			System.out.println("Connected to SQL DMG database");
+		}catch(Exception e) {
+			System.out.println("Connection to SQL DMG host failed");
+			e.printStackTrace();
+		}
 
 		// Indexation
 		ElasticSearchUtil.indexUpdate(dmg.queryDBHistory().get(0));

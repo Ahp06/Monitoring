@@ -93,7 +93,7 @@ public class DMGTest {
 	}
 
 	@Test(expected = java.sql.SQLException.class)
-	public void testConnectionFailed(){
+	public void testConnectionFailed() throws SQLException{
 		dmg.openConnection(null);
 	}
 

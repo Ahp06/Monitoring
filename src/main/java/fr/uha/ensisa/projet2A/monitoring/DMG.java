@@ -20,15 +20,10 @@ public class DMG {
 
 	/**
 	 * Open the connection with the DMG SQL Server
+	 * @throws SQLException 
 	 */
-	public void openConnection(String url) {
-		try {
-			this.connection = DriverManager.getConnection(url);
-			System.out.println("Connected to SQL DMG database");
-		} catch (SQLException e) {
-			System.out.println("Connection to SQL DMG host failed");
-			e.printStackTrace();
-		}
+	public void openConnection(String url) throws SQLException {
+		this.connection = DriverManager.getConnection(url);
 	}
 
 	/**
