@@ -92,10 +92,10 @@ public class DMGTest {
 		assertEquals(dmg.getConnection().getMetaData().getURL(), "jdbc:hsqldb:mem:memdb;shutdown=true");
 	}
 
-	/*@Test(expected = java.sql.SQLException.class)
+	@Test(expected = java.lang.Exception.class)
 	public void testConnectionFailed(){
 		dmg.openConnection(null);
-	}*/
+	}
 
 	@Test
 	public void testQueryHistory() throws Throwable {
