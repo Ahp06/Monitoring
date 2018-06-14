@@ -13,24 +13,22 @@ public class DMG {
 	private Connection connection;
 	private PreparedStatement st;
 	private ResultSet result;
-	
+
 	public DMG() throws ClassNotFoundException {
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	}
-	
+
 	/**
 	 * Open the connection with the DMG SQL Server
 	 */
 	public void openConnection(String url) {
-
 		try {
 			this.connection = DriverManager.getConnection(url);
 			System.out.println("Connected to SQL DMG database");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println("Connection to SQL DMG host failed");
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -75,7 +73,7 @@ public class DMG {
 		this.result = st.executeQuery();
 
 		Timestamp lastDate = null;
-		while(this.result.next()){
+		while (this.result.next()) {
 			lastDate = result.getTimestamp("Time");
 		}
 
