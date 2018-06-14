@@ -33,17 +33,12 @@ public class ElasticSearchUtil {
 	 * @param clusterName
 	 * @param host
 	 * @param port
+	 * @throws UnknownHostException
 	 */
-	public static void initElasticSearch(String clusterName, String host, int port) {
-		try {
-			Settings settings = Settings.builder().put("cluster.name", clusterName).build();
-			client = new PreBuiltTransportClient(settings)
-					.addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Connection : " + clusterName + "@" + host + ":" + port + " failed");
-			e.printStackTrace();
-		}
+	public static void initElasticSearch(String clusterName, String host, int port) throws UnknownHostException {
+		Settings settings = Settings.builder().put("cluster.name", clusterName).build();
+		client = new PreBuiltTransportClient(settings)
+				.addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
 	}
 
 	/**
@@ -136,8 +131,7 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Put data by parsing an object to JSON into the ElasticSearch index
-	 * "update"
+	 * Put data by parsing an object to JSON into the ElasticSearch index "update"
 	 * 
 	 * @param update
 	 * @throws IOException
@@ -161,14 +155,9 @@ public class ElasticSearchUtil {
 	 * @param client
 	 * @param indexName
 	 */
-	public static void deleteIndex(String indexName) {
-		try {
-			client.admin().indices().delete(new DeleteIndexRequest(indexName)).actionGet();
-			System.out.println("Index : " + indexName + " deleted");
-		} catch (Exception e) {
-			System.out.println("Index : " + indexName + " doesn't exist");
-		}
-
+	public static void deleteIndex(String indexName) throws Exception {
+		client.admin().indices().delete(new DeleteIndexRequest(indexName)).actionGet();
+		System.out.println("Index : " + indexName + " deleted");
 	}
 
 	/**
@@ -187,8 +176,8 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Only for the DMG CTX. Return the timestamp string representation of the last modification into
-	 * the database
+	 * Only for the DMG CTX. Return the timestamp string representation of the last
+	 * modification into the database
 	 * 
 	 * @return
 	 * @throws InterruptedException
@@ -216,8 +205,8 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * Only for machines connected with a Moxa. Return the last machine state by
-	 * his ID
+	 * Only for machines connected with a Moxa. Return the last machine state by his
+	 * ID
 	 * 
 	 * @param update
 	 * @return
@@ -230,9 +219,9 @@ public class ElasticSearchUtil {
 					.addSort("time", SortOrder.DESC).get();
 			SearchHits hits = response.getHits();
 			String lastState = hits.getAt(0).getSourceAsMap().get("state").toString();
-			
+
 			return Integer.parseInt(lastState);
-			
+
 		} catch (Exception e) {
 			return -1;
 		}

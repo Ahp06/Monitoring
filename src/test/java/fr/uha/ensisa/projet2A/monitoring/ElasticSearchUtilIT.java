@@ -3,6 +3,7 @@ package fr.uha.ensisa.projet2A.monitoring;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
@@ -12,7 +13,7 @@ import org.junit.Test;
 public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests {
 
 	@Test
-	public void elasticsearchIT() throws IOException, InterruptedException, ExecutionException, ParseException {
+	public void elasticsearchIT() throws Exception {
 
 		// First object for indexation
 		Timestamp firstTime = new Timestamp(5000);
@@ -42,7 +43,7 @@ public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests {
 
 		// Retrieving the date of the last update
 		assertEquals(ElasticSearchUtil.getLastUpdateTime(), current.toString());
-		assertEquals(ElasticSearchUtil.getLastStateByMachineID(data1.getMachineID()),0);
+		assertEquals(ElasticSearchUtil.getLastStateByMachineID(data1.getMachineID()), 0);
 
 		// Delete index
 		ElasticSearchUtil.deleteIndex("update");
@@ -63,6 +64,26 @@ public class ElasticSearchUtilIT extends ElasticSearchIntegrationTests {
 		assertEquals(ElasticSearchUtil.getStateByLabel("Stop"), 1);
 		assertEquals(ElasticSearchUtil.getStateByLabel("Run"), 2);
 		assertEquals(ElasticSearchUtil.getStateByLabel("Alarm"), 3);
+	}
+
+	@Test(expected = java.net.UnknownHostException.class)
+	public void wrongHost() throws UnknownHostException {
+		ElasticSearchUtil.initElasticSearch("elasticsearch-integration", "wrong", 9300);
+	}
+
+	@Test
+	public void wrongState() {
+		assertEquals(ElasticSearchUtil.getStateLabel(10), null);
+	}
+
+	@Test
+	public void wrongLabel() {
+		assertEquals(ElasticSearchUtil.getStateByLabel("wrong label"), -1);
+	}
+	
+	@Test(expected=java.lang.Exception.class)
+	public void deleteWrongIndex() throws Exception {
+		ElasticSearchUtil.deleteIndex("wrong");
 	}
 
 }
