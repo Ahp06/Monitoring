@@ -1,5 +1,7 @@
-[![codecov](https://codecov.io/gh/Ahp06/Monitoring/branch/master/graph/badge.svg)](https://codecov.io/gh/Ahp06/Monitoring)
+[![Build Status](https://travis-ci.org/Ahp06/Monitoring.svg?branch=master)](https://travis-ci.org/Ahp06/Monitoring)
 
+
+[![codecov](https://codecov.io/gh/Ahp06/Monitoring/branch/master/graph/badge.svg)](https://codecov.io/gh/Ahp06/Monitoring)
 
 # Monitoring
 Monitoring of the ENSISA mechanics workshop developed with Java, ElasticSearch and Grafana.
