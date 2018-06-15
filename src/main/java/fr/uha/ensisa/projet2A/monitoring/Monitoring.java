@@ -41,7 +41,7 @@ public class Monitoring {
 			System.out.println("Have you started Elasticsearch ?");
 			e.printStackTrace();
 		}
-
+		
 		// Open connection to the DMG SQL Server
 		dmg = new DMG();
 		try{

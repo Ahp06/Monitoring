@@ -57,9 +57,9 @@ public class Moxa {
 					state = 1 ; //Arrêt 
 				}
 
-				/*if (ElasticSearchUtil.getLastStateByMachineID(i + 2) != -1 && state == ElasticSearchUtil.getLastStateByMachineID(i + 2)) {
+				if (ElasticSearchUtil.getLastStateByMachineID(i + 2) != -1 && state == ElasticSearchUtil.getLastStateByMachineID(i + 2)) {
 					state = -1;
-				}*/
+				}
 
 				if (state != -1) {
 					MachineUpdate update = new MachineUpdate();
