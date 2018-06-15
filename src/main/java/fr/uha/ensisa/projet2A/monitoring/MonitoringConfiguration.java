@@ -15,7 +15,8 @@ public class MonitoringConfiguration {
 	private String IPs[];
 	private String machineNames[];
 	private int moxaPort;
-	private int poolingPeriod;
+	private int moxaPoolingPeriod;
+	private int dmgPoolingPeriod;
 
 	/**
 	 * Default constructor, use not recommended 
@@ -28,7 +29,8 @@ public class MonitoringConfiguration {
 		this.IPs = new String[0];
 		this.machineNames = new String[0];
 		this.moxaPort = 8080;
-		this.poolingPeriod = 5;
+		this.moxaPoolingPeriod = 1;
+		this.dmgPoolingPeriod = 5;	
 	}
 
 	/**
@@ -40,7 +42,7 @@ public class MonitoringConfiguration {
 	 * @param hostDMGSQL
 	 */
 	public MonitoringConfiguration(String clusterNameES, String hostES, int portES, String hostDMGSQL, String[] IPs,
-			String[] machineNames, int moxaPort, int poolingPeriod) {
+			String[] machineNames, int moxaPort, int moxaPoolingPeriod, int dmgPoolingPeriod) {
 
 		this.clusterNameES = clusterNameES;
 		this.hostES = hostES;
@@ -49,7 +51,8 @@ public class MonitoringConfiguration {
 		this.IPs = IPs;
 		this.machineNames = machineNames;
 		this.moxaPort = moxaPort;
-		this.poolingPeriod = poolingPeriod;
+		this.moxaPoolingPeriod = moxaPoolingPeriod;
+		this.dmgPoolingPeriod = dmgPoolingPeriod;
 
 		System.out.println("Configuration initialized");
 	}
@@ -74,7 +77,8 @@ public class MonitoringConfiguration {
 		this.setIPs(config.getIPs());
 		this.setMachineNames(config.getMachineNames());
 		this.setMoxaPort(config.getMoxaPort());
-		this.setPoolingPeriod(config.getPoolingPeriod());
+		this.setDmgPoolingPeriod(config.getDmgPoolingPeriod());
+		this.setMoxaPoolingPeriod(config.getMoxaPoolingPeriod());
 
 		System.out.println("Configuration initialized");
 
@@ -136,12 +140,20 @@ public class MonitoringConfiguration {
 		this.moxaPort = moxaPort;
 	}
 
-	public int getPoolingPeriod() {
-		return poolingPeriod;
+	public int getDmgPoolingPeriod() {
+		return dmgPoolingPeriod;
 	}
 
-	public void setPoolingPeriod(int poolingPeriod) {
-		this.poolingPeriod = poolingPeriod;
+	public void setDmgPoolingPeriod(int dmgPoolingPeriod) {
+		this.dmgPoolingPeriod = dmgPoolingPeriod;
+	}
+
+	public int getMoxaPoolingPeriod() {
+		return moxaPoolingPeriod;
+	}
+
+	public void setMoxaPoolingPeriod(int moxaPoolingPeriod) {
+		this.moxaPoolingPeriod = moxaPoolingPeriod;
 	}
 
 	@Override
@@ -156,7 +168,8 @@ public class MonitoringConfiguration {
 			tmp.append("Machine : " + this.machineNames[i] + " , IP = " + this.IPs[i] + "\n");
 		}
 		tmp.append("Moxa port = " + this.moxaPort + "\n");
-		tmp.append("Pooling period = " + this.poolingPeriod + "\n");
+		tmp.append("Moxa pooling period = " + this.moxaPoolingPeriod + "\n");
+		tmp.append("DMG pooling period = " + this.dmgPoolingPeriod + "\n");
 		tmp.append("**** End of configuration ****");
 
 		return tmp.toString();

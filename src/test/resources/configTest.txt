@@ -6,5 +6,6 @@
 "machineNames" : [ "machine1" , "machine2" ],
 "IPs": [ "IP1", "IP2" ],
 "moxaPort":8080,
-"poolingPeriod":5
+"dmgPoolingPeriod":5,
+"moxaPoolingPeriod":1
 }

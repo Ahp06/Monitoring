@@ -140,8 +140,8 @@ public class Monitoring {
 
 		//Pooling 1 sec ? 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(2);
-		monitoringExecutor.scheduleAtFixedRate(dmgRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
-		monitoringExecutor.scheduleAtFixedRate(moxaRunnable, 0, config.getPoolingPeriod(), TimeUnit.SECONDS);
+		monitoringExecutor.scheduleAtFixedRate(dmgRunnable, 0, config.getDmgPoolingPeriod(), TimeUnit.SECONDS);
+		monitoringExecutor.scheduleAtFixedRate(moxaRunnable, 0, config.getMoxaPoolingPeriod(), TimeUnit.SECONDS);
 
 	}
 }
