@@ -106,7 +106,7 @@ public class DMGTest {
 
 	@Test
 	public void testGetLastUpdate() throws Exception {
-		Timestamp timestamp2 = java.sql.Timestamp.valueOf("2017-05-24 16:00:15.853");
+		Timestamp timestamp2 = java.sql.Timestamp.valueOf("2017-05-24 18:00:15.853");
 		assertEquals(dmg.getLastUpdateTime().toString(), timestamp2.toString());
 
 	}
@@ -116,7 +116,7 @@ public class DMGTest {
 		System.out.println(dmg.getUpdatesFromLastDate("2017-05-23 15:57:14.853"));
 		System.out.println(this.getUpdateFromLastDate().toString());
 		assertEquals(dmg.getUpdatesFromLastDate("2017-05-23 15:57:14.853").toString(),
-				this.getUpdateFromLastDate().toString());
+				"[MachineUpdate [machineID=1, machineName=DMG_CTX, state=1, stateLabel=Stop, time=2017-05-24 18:00:15.853]]");
 	}
 
 }

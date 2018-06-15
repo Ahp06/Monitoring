@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class DMG {
 
@@ -69,7 +71,7 @@ public class DMG {
 
 		Timestamp lastDate = null;
 		while (this.result.next()) {
-			lastDate = result.getTimestamp("Time");
+			lastDate = result.getTimestamp("Time",Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 		}
 
 		return lastDate.toString();
@@ -96,7 +98,7 @@ public class DMG {
 			update.setMachineName("DMG_CTX");
 			update.setState(ElasticSearchUtil.getStateByLabel(result.getString("Status")));
 			update.setStateLabel(result.getString("Status"));
-			update.setTime(result.getTimestamp("Time"));
+			update.setTime(result.getTimestamp("Time",Calendar.getInstance(TimeZone.getTimeZone("UTC"))));
 			updates.add(update);
 		}
 

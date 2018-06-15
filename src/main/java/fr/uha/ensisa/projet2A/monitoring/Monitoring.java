@@ -65,7 +65,7 @@ public class Monitoring {
 		if (ElasticSearchUtil.isESDatabaseEmpty()) {
 			ElasticSearchUtil.putData(dmg.queryDBHistory().get(1));
 		}
-
+		
 		Runnable dmgRunnable = new Runnable() {
 
 			@Override
@@ -138,7 +138,6 @@ public class Monitoring {
 			}
 		};
 
-		//Pooling 1 sec ? 
 		ScheduledExecutorService monitoringExecutor = Executors.newScheduledThreadPool(2);
 		monitoringExecutor.scheduleAtFixedRate(dmgRunnable, 0, config.getDmgPoolingPeriod(), TimeUnit.SECONDS);
 		monitoringExecutor.scheduleAtFixedRate(moxaRunnable, 0, config.getMoxaPoolingPeriod(), TimeUnit.SECONDS);

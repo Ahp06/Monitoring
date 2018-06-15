@@ -3,7 +3,7 @@ package fr.uha.ensisa.projet2A.monitoring;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -198,14 +198,16 @@ public class ElasticSearchUtil {
 			// Change of the date format from "yyyy-MM-dd'T'HH:mm:ss.SSSX" to
 			// "yyyy-MM-dd HH:mm:ss.S"
 			
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-			//df.setTimeZone(TimeZone.getTimeZone("UTC"));
+			System.out.println("last date before formating = " + last);
 			
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"); 
 			Date date = df.parse(last);
-			DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 			
-			//outputFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			DateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 			String dateFormatted = outputFormatter.format(date);
+			
+			System.out.println("last date before formating = " + dateFormatted);
+			
 			
 			return dateFormatted;
 		}
