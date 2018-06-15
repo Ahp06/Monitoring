@@ -3,13 +3,10 @@ package fr.uha.ensisa.projet2A.monitoring;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -24,7 +21,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.mockito.internal.verification.Times;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
 public class ElasticSearchUtil {
